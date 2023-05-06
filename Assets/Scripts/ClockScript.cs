@@ -38,7 +38,7 @@ public class ClockScript : MonoBehaviour
         int yearTens = (year % 100) / 10;
         int yearOnes = year % 10;
 
-        GameObject secondDivergence1 = GameObject.Find("Second Divergence 1");
+        GameObject secondDivergence1 = GameObject.Find("Second Divergence 1(scripted)");
         if (secondDivergence1 != null)
         {
             // Get the Image component and set the sprite
