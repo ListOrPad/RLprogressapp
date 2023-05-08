@@ -23,4 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Settings Scene.unity
     guid: e2ebdd8bfb59ede41983391600e83033
+  - enabled: 1
+    path: Assets/Scenes/About Scene.unity
+    guid: 2435e2ebbccc00a4abd34f969195baeb
+  - enabled: 1
+    path: Assets/Scenes/Prestige Scene.unity
+    guid: b72a153b2e1f7f2478dbec7950f58fe5
   m_configObjects: {}
