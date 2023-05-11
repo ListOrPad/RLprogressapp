@@ -76,6 +76,6 @@ public class Timer : MonoBehaviour
     public void StopTimer()
     {
         timerActive = false;
-        //here should be displayed menu what to do with the session etc.
+        //here should be displayed menu of what to do with the session etc.
     }
 }
