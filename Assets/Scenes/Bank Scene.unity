@@ -1436,7 +1436,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.46326926}
   m_AnchorMax: {x: 1, y: 0.6912693}
-  m_AnchoredPosition: {x: -0.5024719, y: 4.406006}
+  m_AnchoredPosition: {x: -0.5024414, y: 4.406006}
   m_SizeDelta: {x: -1, y: 3.6279907}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1324884237
@@ -1489,7 +1489,7 @@ GameObject:
   - component: {fileID: 1465272051}
   - component: {fileID: 1465272050}
   m_Layer: 5
-  m_Name: Sum
+  m_Name: Sum(P)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

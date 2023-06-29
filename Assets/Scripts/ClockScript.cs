@@ -146,29 +146,10 @@ public class ClockScript : MonoBehaviour
     }
     Sprite GetDigitSprite(int digit)
     {
-        switch (digit)
+        if (digit < 0 && digit > 9)
         {
-            case 0:
-                return sprites[0];
-            case 1:
-                return sprites[1];
-            case 2:
-                return sprites[2];
-            case 3:
-                return sprites[3];
-            case 4:
-                return sprites[4];
-            case 5:
-                return sprites[5];
-            case 6:
-                return sprites[6];
-            case 7:
-                return sprites[7];
-            case 8:
-                return sprites[8];
-            case 9:
-                return sprites[9];
+            return null; 
         }
-        return null;
+        return sprites[digit];
     }
 }

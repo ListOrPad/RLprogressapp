@@ -43,12 +43,8 @@ public class Timer : MonoBehaviour
             {
                 currentTime = timerLimit;
             }
-            SetTimerText(); 
         }
-        else
-        {
-            SetTimerText();
-        }
+        SetTimerText();
     }
 
     public void SetTimerText()
@@ -62,16 +58,8 @@ public class Timer : MonoBehaviour
 
     public void StartPauseTimer()
     {
-        if (timerActive == false)
-        {
-            timerActive = true;
-            button.image.sprite = pauseSprite; 
-        }
-        else
-        {
-            timerActive = false;
-            button.image.sprite = playSprite;
-        }
+        timerActive = !timerActive;
+        button.image.sprite = timerActive ? pauseSprite : playSprite;
     }
     public void StopTimer()
     {
