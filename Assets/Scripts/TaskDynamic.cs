@@ -5,34 +5,30 @@ using UnityEngine.UI;
 
 public class TaskDynamic : MonoBehaviour
 {
-    public Text taskText;
-    public RectTransform rectTransform;
-    public float initialHeight;
+    public GameObject taskPrefab;
+    public RectTransform contentContainer;
 
-    private void Start()
+    public void AddTask(string taskText)
     {
-        initialHeight = rectTransform.sizeDelta.y;
-    }
+        GameObject taskObject = Instantiate(taskPrefab, contentContainer);
 
-    public void ChangeHeightOnTask()
-    {
-        float newHeight = initialHeight + taskText.preferredHeight;
-        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, newHeight);
+        Text taskTextComponent = taskObject.GetComponentInChildren<Text>();
+        taskTextComponent.text = taskText;
 
-        float yOffset = newHeight - initialHeight;
-        int siblingIndex = transform.GetSiblingIndex();
-        int siblingCount = transform.parent.childCount;
+        //вот до сюда все хорошо
+
+        float yOffset = taskTextComponent.preferredHeight;
+        int siblingIndex = taskObject.transform.GetSiblingIndex();
+        int siblingCount = contentContainer.childCount;
         for (int i = siblingIndex + 1; i < siblingCount; i++)
         {
-            RectTransform siblingRectTransform = transform.parent.GetChild(i).GetComponent<RectTransform>();
+            RectTransform siblingRectTransform = contentContainer.GetChild(i).GetComponent<RectTransform>();
             siblingRectTransform.anchoredPosition += new Vector2(0f, yOffset);
         }
     }
 
+    private void Start()
+    {
 
-
-    //void Update()
-    //{
-        
-    //}
+    }
 }
