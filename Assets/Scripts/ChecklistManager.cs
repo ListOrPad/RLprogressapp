@@ -27,6 +27,10 @@ public class ChecklistManager : MonoBehaviour
 
         saveButton.onClick.AddListener(delegate { CreateChecklistItem(addInputFields[0].text, int.Parse(addInputFields[1].text)); });
     }
+
+    /// <summary>
+    /// Enable or disable edit task panel
+    /// </summary>
     public void SwitchMode(int mode)
     {
         switch(mode)
@@ -55,25 +59,33 @@ public class ChecklistManager : MonoBehaviour
         SwitchMode(0);
     }
 
-    void CheckTask(ChecklistObject taskObject)       // delete old prefab, create new object in history
+    /// <summary>
+    /// Transfers the task to the history
+    /// </summary>
+    void CheckTask(ChecklistObject taskObject)
     {
 
         GameObject historyTask = Instantiate(historyItemPrefab, history);
         historyTask.transform.SetSiblingIndex(1);
+        //CrossHistoryTask();
         ChecklistObject historyObject = historyTask.GetComponent<ChecklistObject>();
         int index = 0;
         if(historyObjects.Count > 0)
-            index = historyObjects.Count;         //may cause problems (no -1)
-        int numberOfTask = historyTask.transform.GetSiblingIndex() - 1;  //good method, should be used
-        historyObject.SetHistoryObjectInfo(numberOfTask, taskObject.objName, taskObject.reward, index);
+            index = historyObjects.Count;  //may cause problems (no -1)
         historyObjects.Add(historyObject);
+        historyObject.SetHistoryNumbering(historyObjects);
+        historyObject.SetHistoryObjectInfo(taskObject.objName, taskObject.reward, index);
         checklistObjects.Remove(taskObject);
         Destroy(taskObject.gameObject);
 
         ChecklistObject temp = historyObject;
         historyObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { UncheckTask(temp); });
     }
-    void UncheckTask(ChecklistObject historyTask) //return the task back to the list
+
+    /// <summary>
+    /// Returns the history task back to the To-Do list
+    /// </summary>
+    void UncheckTask(ChecklistObject historyObject)
     {
         
         GameObject task = Instantiate(checklistItemPrefab, content);
@@ -82,21 +94,19 @@ public class ChecklistManager : MonoBehaviour
         int index = 0;
         if(historyObjects.Count > 0)
             index = historyObjects.Count - 1;
-        taskObject.SetObjectInfo(historyTask.objNameForUncheck, historyTask.reward, index);
         checklistObjects.Add(taskObject);
-        historyObjects.Remove(historyTask);
-        Destroy(historyTask.gameObject);
+        historyObjects.Remove(historyObject);
+        historyObject.SetHistoryNumbering(historyObjects);
+        taskObject.SetObjectInfo(historyObject.objNameNoNumber, historyObject.reward, index);
+        historyObject.SetHistoryObjectInfo(taskObject.objName, taskObject.reward, index);
+        Destroy(historyObject.gameObject);
 
         ChecklistObject temp = taskObject;
         taskObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp); });
     }
 
-    void SetHistoryNumbering(ChecklistObject historyObject)
-    {
-        
-    }
+   
     void Update()
     {
-        SetHistoryNumbering();
     }
 }
