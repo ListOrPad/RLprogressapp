@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,9 +25,9 @@ public class ChecklistManager : MonoBehaviour
     private void Start()
     {
         filepath = Application.persistentDataPath + "/checklist.txt";
-        addInputFields = editPanel.GetComponentsInChildren<TMP_InputField> ();
+        addInputFields = editPanel.GetComponentsInChildren<TMP_InputField>();
 
-        saveButton.onClick.AddListener(delegate { CreateChecklistItem(addInputFields[0].text, int.Parse(addInputFields[1].text)); });
+        saveButton.onClick.AddListener(delegate { CreateChecklistItem(addInputFields[0].text, TryParseInput(addInputFields[1].text)); } );
     }
 
     /// <summary>
@@ -43,8 +45,25 @@ public class ChecklistManager : MonoBehaviour
                 break;
         }
     }
+
+    private int TryParseInput(string input)
+    {
+        try
+        {
+            return int.Parse(input);
+        }
+        catch
+        {
+            return 0;
+        }
+    }
     void CreateChecklistItem(string name, int reward) 
     {
+        if (name == "")
+        {
+            SwitchMode(0);
+            return;
+        }
         GameObject task = Instantiate(checklistItemPrefab, content);
         task.transform.SetSiblingIndex(1);
         ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
