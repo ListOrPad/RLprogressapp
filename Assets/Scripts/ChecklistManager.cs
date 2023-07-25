@@ -18,9 +18,13 @@ public class ChecklistManager : MonoBehaviour
     string filepath;
 
     private List<ChecklistObject> checklistObjects = new List<ChecklistObject> ();
-    private List<ChecklistObject> historyObjects = new List<ChecklistObject> (); //а тот ли тип?
+    private List<ChecklistObject> historyObjects = new List<ChecklistObject> ();
 
     private TMP_InputField[] addInputFields;
+
+    [Header("History Toggle")]
+    public Toggle historyToggle;
+    public GameObject scrollViewHistory;
 
     private void Start()
     {
@@ -28,6 +32,7 @@ public class ChecklistManager : MonoBehaviour
         addInputFields = editPanel.GetComponentsInChildren<TMP_InputField>();
 
         saveButton.onClick.AddListener(delegate { CreateChecklistItem(addInputFields[0].text, TryParseInput(addInputFields[1].text)); } );
+        historyToggle.onValueChanged.AddListener(delegate { ToggleHistoryVisibility(); } );
     }
 
     /// <summary>
@@ -62,7 +67,26 @@ public class ChecklistManager : MonoBehaviour
     {
         //make a list or array of tasks?
     }
+    private void ToggleHistoryVisibility()
+    {
+        SwitchHistoryMode(1);
+    }
+    public void SwitchHistoryMode(int mode)
+    {
+        switch (mode)
+        {
+            case 0:
+                scrollViewHistory.SetActive(false);
+                break;
+            case 1:
+                scrollViewHistory.SetActive(true);
+                break;
+        }
+        //historyToggle.transform.
 
+        //history toggle moves up
+        //history scrollview expands(sets active)
+    }
     void CreateChecklistItem(string name, int reward) 
     {
         if (name == "")
