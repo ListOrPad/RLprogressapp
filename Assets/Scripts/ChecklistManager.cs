@@ -57,6 +57,12 @@ public class ChecklistManager : MonoBehaviour
             return 0;
         }
     }
+
+    private void MoveTasks(GameObject task)
+    {
+        //make a list or array of tasks?
+    }
+
     void CreateChecklistItem(string name, int reward) 
     {
         if (name == "")
@@ -65,7 +71,7 @@ public class ChecklistManager : MonoBehaviour
             return;
         }
         GameObject task = Instantiate(checklistItemPrefab, content);
-        task.transform.SetSiblingIndex(1);
+        task.transform.SetSiblingIndex(0);
         ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
         int index = 0;
         if(checklistObjects.Count > 0)
@@ -90,7 +96,7 @@ public class ChecklistManager : MonoBehaviour
         ChecklistObject historyObject = historyTask.GetComponent<ChecklistObject>();
         int index = 0;
         if(historyObjects.Count > 0)
-            index = historyObjects.Count;  //may cause problems (no -1)
+            index = historyObjects.Count;  //may cause problems with index value(no -1)
         historyObjects.Add(historyObject);
         historyObject.SetHistoryNumbering(historyObjects);
         historyObject.SetHistoryObjectInfo(taskObject.objName, taskObject.reward, index);
@@ -108,7 +114,7 @@ public class ChecklistManager : MonoBehaviour
     {
         
         GameObject task = Instantiate(checklistItemPrefab, content);
-        task.transform.SetSiblingIndex(1);
+        task.transform.SetSiblingIndex(0);
         ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
         int index = 0;
         if(historyObjects.Count > 0)
