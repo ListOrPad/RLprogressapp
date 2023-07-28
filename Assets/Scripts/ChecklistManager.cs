@@ -15,7 +15,7 @@ public class ChecklistManager : MonoBehaviour
     public GameObject historyItemPrefab;
     public Transform history;
 
-    string filepath;
+    private string filepath;
 
     private List<ChecklistObject> checklistObjects = new List<ChecklistObject> ();
     private List<ChecklistObject> historyObjects = new List<ChecklistObject> ();
@@ -24,7 +24,11 @@ public class ChecklistManager : MonoBehaviour
 
     [Header("History Toggle")]
     public Toggle historyToggle;
+    public GameObject historyToggleObject;
     public GameObject scrollViewHistory;
+    //public Sprite historyArrowEnabled;
+    //public Sprite historyArrowDisabled;
+    private Image toggleImage;
 
     private void Start()
     {
@@ -67,25 +71,38 @@ public class ChecklistManager : MonoBehaviour
     {
         //make a list or array of tasks?
     }
+
+    /// <summary>
+    /// Moves history toggle to a new position and sets history list (in)visible
+    /// </summary>
     private void ToggleHistoryVisibility()
     {
-        SwitchHistoryMode(1);
-    }
-    public void SwitchHistoryMode(int mode)
-    {
-        switch (mode)
+        if (scrollViewHistory.activeSelf == false)
         {
-            case 0:
-                scrollViewHistory.SetActive(false);
-                break;
-            case 1:
-                scrollViewHistory.SetActive(true);
-                break;
+            //move history toggle up
+            historyToggleObject.GetComponent<RectTransform>().offsetMin = new Vector2(2f, 750f); //(left, bottom)
+            historyToggleObject.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 750f); //(-right, -top)
+            //set scrollview active
+            scrollViewHistory.SetActive(true);
+            //change sprite
+            Sprite historyArrowEnabled = Resources.Load<Sprite>("Images/History Enabled Arrow");
+            Image[] imageComponents = historyToggleObject.GetComponentsInChildren<Image>();
+            Image secondImageInToggle = imageComponents[1];
+            secondImageInToggle.sprite = historyArrowEnabled;
         }
-        //historyToggle.transform.
-
-        //history toggle moves up
-        //history scrollview expands(sets active)
+        else if (scrollViewHistory.activeSelf == true)
+        {
+            //move history toggle down
+            historyToggleObject.GetComponent<RectTransform>().offsetMin = new Vector2(1f, -1.5f); //(left, bottom)
+            historyToggleObject.GetComponent<RectTransform>().offsetMax = new Vector2(0f, -0.5f); //(-right, -top)
+            //set scrollview inactive
+            scrollViewHistory.SetActive(false);
+            //change sprite
+            Sprite historyArrowDisabled = Resources.Load<Sprite>("Images/History Disabled Arrow");
+            Image[] imageComponents = historyToggleObject.GetComponentsInChildren<Image>();
+            Image secondImageInToggle = imageComponents[1];
+            secondImageInToggle.sprite = historyArrowDisabled;
+        }
     }
     void CreateChecklistItem(string name, int reward) 
     {
