@@ -84,7 +84,7 @@ public class ChecklistManager : MonoBehaviour
             historyToggleObject.GetComponent<RectTransform>().offsetMax = new Vector2(0f, -0.5f); //(-right, -top)
             //set scrollview invisible
             scrollViewHistory.SetActive(false);
-            //expand base checklist scrollvierw size
+            //expand base checklist scrollview size
             GameObject scrollViewChecklist = GameObject.Find("Scroll View Checklist");
             scrollViewChecklist.GetComponent<RectTransform>().offsetMin = new Vector2(-25f, 194f);
             //change sprite
@@ -122,7 +122,7 @@ public class ChecklistManager : MonoBehaviour
     {
 
         GameObject historyTask = Instantiate(historyItemPrefab, history);
-        historyTask.transform.SetSiblingIndex(1);
+        historyTask.transform.SetSiblingIndex(0);
         //CrossHistoryTask();
         ChecklistObject historyObject = historyTask.GetComponent<ChecklistObject>();
         int index = 0;
