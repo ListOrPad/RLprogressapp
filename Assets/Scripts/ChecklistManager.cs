@@ -39,22 +39,6 @@ public class ChecklistManager : MonoBehaviour
         historyToggle.onValueChanged.AddListener(delegate { ToggleHistoryVisibility(); } );
     }
 
-    /// <summary>
-    /// Enable or disable edit task panel
-    /// </summary>
-    public void SwitchMode(int mode)
-    {
-        switch(mode)
-        {
-            case 0:
-                editPanel.SetActive(false);
-                break;
-            case 1:
-                editPanel.SetActive(true);
-                break;
-        }
-    }
-
     private int TryParseInput(string input)
     {
         try
@@ -73,7 +57,7 @@ public class ChecklistManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Moves history toggle to a new position and sets history list (in)visible
+    /// Moves history toggle to a new position; sets history list (in)visible; expands and compresses scroll view size; changes sprite
     /// </summary>
     private void ToggleHistoryVisibility()
     {
@@ -82,12 +66,15 @@ public class ChecklistManager : MonoBehaviour
             //move history toggle up
             historyToggleObject.GetComponent<RectTransform>().offsetMin = new Vector2(2f, 750f); //(left, bottom)
             historyToggleObject.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 750f); //(-right, -top)
-            //set scrollview active
+            //set scrollview visible
             scrollViewHistory.SetActive(true);
+            //compress base checklist scrollview size
+            GameObject scrollViewChecklist = GameObject.Find("Scroll View Checklist");
+            scrollViewChecklist.GetComponent<RectTransform>().offsetMin = new Vector2(-25f, 885.5f);
             //change sprite
             Sprite historyArrowEnabled = Resources.Load<Sprite>("Images/History Enabled Arrow");
-            Image[] imageComponents = historyToggleObject.GetComponentsInChildren<Image>();
-            Image secondImageInToggle = imageComponents[1];
+            Image[] imageComponentsInToggle = historyToggleObject.GetComponentsInChildren<Image>();
+            Image secondImageInToggle = imageComponentsInToggle[1];
             secondImageInToggle.sprite = historyArrowEnabled;
         }
         else if (scrollViewHistory.activeSelf == true)
@@ -95,12 +82,15 @@ public class ChecklistManager : MonoBehaviour
             //move history toggle down
             historyToggleObject.GetComponent<RectTransform>().offsetMin = new Vector2(1f, -1.5f); //(left, bottom)
             historyToggleObject.GetComponent<RectTransform>().offsetMax = new Vector2(0f, -0.5f); //(-right, -top)
-            //set scrollview inactive
+            //set scrollview invisible
             scrollViewHistory.SetActive(false);
+            //expand base checklist scrollvierw size
+            GameObject scrollViewChecklist = GameObject.Find("Scroll View Checklist");
+            scrollViewChecklist.GetComponent<RectTransform>().offsetMin = new Vector2(-25f, 194f);
             //change sprite
             Sprite historyArrowDisabled = Resources.Load<Sprite>("Images/History Disabled Arrow");
-            Image[] imageComponents = historyToggleObject.GetComponentsInChildren<Image>();
-            Image secondImageInToggle = imageComponents[1];
+            Image[] imageComponentsInToggle = historyToggleObject.GetComponentsInChildren<Image>();
+            Image secondImageInToggle = imageComponentsInToggle[1];
             secondImageInToggle.sprite = historyArrowDisabled;
         }
     }
@@ -108,7 +98,7 @@ public class ChecklistManager : MonoBehaviour
     {
         if (name == "")
         {
-            SwitchMode(0);
+            editPanel.SetActive(false);
             return;
         }
         GameObject task = Instantiate(checklistItemPrefab, content);
@@ -122,7 +112,7 @@ public class ChecklistManager : MonoBehaviour
         ChecklistObject temp = taskObject;
         taskObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp);});
 
-        SwitchMode(0);
+        editPanel.SetActive(false);
     }
 
     /// <summary>
