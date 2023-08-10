@@ -22,6 +22,8 @@ public class ChecklistManager : MonoBehaviour
 
     private TMP_InputField[] addInputFields;
 
+    internal List<GameObject> tasks = new List<GameObject>();
+
     [Header("History Toggle")]
     public Toggle historyToggle;
     public GameObject historyToggleObject;
@@ -101,7 +103,12 @@ public class ChecklistManager : MonoBehaviour
             editPanel.SetActive(false);
             return;
         }
+
         GameObject task = Instantiate(checklistItemPrefab, content);
+
+        //add a task on a list for wrapping 
+        tasks.Add(task);
+
         task.transform.SetSiblingIndex(0);
         ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
         int index = 0;
@@ -123,7 +130,6 @@ public class ChecklistManager : MonoBehaviour
 
         GameObject historyTask = Instantiate(historyItemPrefab, history);
         historyTask.transform.SetSiblingIndex(0);
-        //CrossHistoryTask();
         ChecklistObject historyObject = historyTask.GetComponent<ChecklistObject>();
         int index = 0;
         if(historyObjects.Count > 0)

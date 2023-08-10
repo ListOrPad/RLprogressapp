@@ -2,33 +2,69 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System;
 
 public class TaskDynamic : MonoBehaviour
 {
-    public GameObject taskPrefab;
-    public RectTransform contentContainer;
+    private Text textMeshPro;
+    public ChecklistManager checklistManager;
 
-    public void AddTask(string taskText)
+
+    private float previousTextHeight;
+    private VerticalLayoutGroup layoutGroup;
+    private ContentSizeFitter contentSizeFitter;
+
+    void Start()
     {
-        GameObject taskObject = Instantiate(taskPrefab, contentContainer);
+        layoutGroup = GetComponent<VerticalLayoutGroup>();
+        contentSizeFitter = GetComponent<ContentSizeFitter>();
 
-        Text taskTextComponent = taskObject.GetComponentInChildren<Text>();
-        taskTextComponent.text = taskText;
+        previousTextHeight = CalculateTextHeight();
+    }
 
-        //вот до сюда все хорошо
+    void Update()
+    {
+        float currentTextHeight = CalculateTextHeight();
 
-        float yOffset = taskTextComponent.preferredHeight;
-        int siblingIndex = taskObject.transform.GetSiblingIndex();
-        int siblingCount = contentContainer.childCount;
-        for (int i = siblingIndex + 1; i < siblingCount; i++)
+
+        if (!Mathf.Approximately(currentTextHeight, previousTextHeight))
         {
-            RectTransform siblingRectTransform = contentContainer.GetChild(i).GetComponent<RectTransform>();
-            siblingRectTransform.anchoredPosition += new Vector2(0f, yOffset);
+            MoveObjectsBelowText(currentTextHeight);
+        }
+
+        previousTextHeight = currentTextHeight;
+    }
+
+    private float CalculateTextHeight()
+    {
+        try
+        {
+            //assigns the last added task to the 'textMeshPro' var
+            textMeshPro = checklistManager.tasks[^1].GetComponentInChildren<Text>();
+            return textMeshPro.preferredHeight;
+        }
+        catch
+        {
+            Debug.Log("I catched it!");
+            return 0;
+        }
+
+    }
+
+    private void MoveObjectsBelowText(float currentTextHeight)
+    {
+        foreach (GameObject task in checklistManager.tasks)
+        {
+            RectTransform taskRectTransform = task.GetComponent<RectTransform>();
+            taskRectTransform.anchoredPosition -= new Vector2(0f, currentTextHeight - previousTextHeight);
         }
     }
 
-    private void Start()
+    private void UpdateLayout(float currentTextHeight)
     {
-
+        //float newPreferredHeight = layoutGroup.preferredHeight + currentTextHeight - previousTextHeight;
+        //layoutGroup.minHeight = newPreferredHeight;
+        //layoutGroup.preferredHeight = newPreferredHeight;
     }
 }
