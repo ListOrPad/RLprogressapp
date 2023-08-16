@@ -28,9 +28,6 @@ public class ChecklistManager : MonoBehaviour
     public Toggle historyToggle;
     public GameObject historyToggleObject;
     public GameObject scrollViewHistory;
-    //public Sprite historyArrowEnabled;
-    //public Sprite historyArrowDisabled;
-    private Image toggleImage;
 
     private void Start()
     {
@@ -53,10 +50,6 @@ public class ChecklistManager : MonoBehaviour
         }
     }
 
-    private void MoveTasks(GameObject task)
-    {
-        //make a list or array of tasks?
-    }
 
     /// <summary>
     /// Moves history toggle to a new position; sets history list (in)visible; expands and compresses scroll view size; changes sprite
@@ -107,6 +100,7 @@ public class ChecklistManager : MonoBehaviour
         GameObject task = Instantiate(checklistItemPrefab, content);
 
         //add a task on a list for wrapping 
+        //I probably dont need it(And 'tasks' var)
         tasks.Add(task);
 
         task.transform.SetSiblingIndex(0);
@@ -136,7 +130,7 @@ public class ChecklistManager : MonoBehaviour
             index = historyObjects.Count;  //may cause problems with index value(no -1)
         historyObjects.Add(historyObject);
         historyObject.SetHistoryNumbering(historyObjects);
-        historyObject.SetHistoryObjectInfo(taskObject.objName, taskObject.reward, index);
+        historyObject.SetHistoryObjectInfo(taskObject.objOnlyName, taskObject.reward, index);
         checklistObjects.Remove(taskObject);
         Destroy(taskObject.gameObject);
 
@@ -159,8 +153,8 @@ public class ChecklistManager : MonoBehaviour
         checklistObjects.Add(taskObject);
         historyObjects.Remove(historyObject);
         historyObject.SetHistoryNumbering(historyObjects);
-        taskObject.SetObjectInfo(historyObject.objNameNoNumber, historyObject.reward, index);
-        historyObject.SetHistoryObjectInfo(taskObject.objName, taskObject.reward, index);
+        taskObject.SetObjectInfo(historyObject.objOnlyName, historyObject.reward, index);
+        historyObject.SetHistoryObjectInfo(taskObject.objOnlyName, taskObject.reward, index);
         Destroy(historyObject.gameObject);
 
         ChecklistObject temp = taskObject;

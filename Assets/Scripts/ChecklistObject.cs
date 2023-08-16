@@ -6,29 +6,30 @@ using UnityEngine.UI;
 public class ChecklistObject : MonoBehaviour
 {
     internal int numberOfTask;
-    internal string objNameNoNumber;
-    public string objName;
+    internal string objOnlyName;
+    public string objFullName;
     public int reward;
     public int index;
 
-    private Text itemText;
+    private Text taskText;
 
     void Start()
     {
-        itemText = GetComponentInChildren<Text>();
-        itemText.text = objName;
+        taskText = GetComponent<Text>();
+        taskText.text = objFullName;
     }
 
     public void SetObjectInfo(string name, int reward, int index)
     {
-        this.objName = name;
+        this.objOnlyName = name;
+        this.objFullName = $"{objOnlyName} {{{reward}}}";
         this.reward = reward;
         this.index = index;
     }
     public void SetHistoryObjectInfo(string name, int reward, int index)
     {
-        this.objName = $"{numberOfTask}. " + name;
-        this.objNameNoNumber = name;
+        this.objOnlyName = name;
+        this.objFullName = $"{numberOfTask}. {objOnlyName} {{{reward}}}";
         this.reward = reward;
         this.index = index;
     }
@@ -40,19 +41,15 @@ public class ChecklistObject : MonoBehaviour
     {
         GameObject history = GameObject.Find("History");
 
-        foreach (ChecklistObject historyObject in historyObjects)
-        {
-            itemText = GetComponentInChildren<Text>();
-            historyObject.itemText.text = historyObject.objNameNoNumber;
-        }
+        taskText = GetComponent<Text>();
 
-        historyObjects.Sort((a, b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
+        historyObjects.Sort((a, b) => b.transform.GetSiblingIndex().CompareTo(a.transform.GetSiblingIndex()));
 
         for (int i = 0; i < historyObjects.Count; i++)
         {
             ChecklistObject historyObject = historyObjects[i];
             historyObject.numberOfTask = i + 1;
-            historyObject.itemText.text = $"{historyObject.numberOfTask}. {historyObject.objNameNoNumber}";
+            historyObject.taskText.text = $"{historyObject.numberOfTask}. {historyObject.objOnlyName} {{{historyObject.reward}}}";
         }
     }
 }
