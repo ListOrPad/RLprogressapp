@@ -29,6 +29,14 @@ public class ChecklistManager : MonoBehaviour
     public GameObject historyToggleObject;
     public GameObject scrollViewHistory;
 
+    [Header("Edit task")]
+    public GameObject saveButtonObj;
+    public GameObject editSaveButtonObj;
+    public GameObject deleteTaskButton;
+    //public Button editButton;    // NOTE THIS ONE
+    public Button editSaveButton;
+
+
     private void Start()
     {
         filepath = Application.persistentDataPath + "/checklist.txt";
@@ -36,6 +44,7 @@ public class ChecklistManager : MonoBehaviour
 
         saveButton.onClick.AddListener(delegate { CreateChecklistItem(addInputFields[0].text, TryParseInput(addInputFields[1].text)); } );
         historyToggle.onValueChanged.AddListener(delegate { ToggleHistoryVisibility(); } );
+
     }
 
     private int TryParseInput(string input)
@@ -103,6 +112,12 @@ public class ChecklistManager : MonoBehaviour
         //I probably dont need it(And 'tasks' var)
         tasks.Add(task);
 
+        //prepare task for using edit button on task create
+        Button editButton = task.GetComponentInChildren<Button>();
+        editButton.onClick.AddListener(delegate { editPanel.SetActive(true); });
+        editButton.onClick.AddListener(delegate { TransferDataForEdit(task, name, reward); });
+        editButton.onClick.AddListener(delegate { SwitchSaveButtonTo("EDIT"); });
+
         task.transform.SetSiblingIndex(0);
         ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
         int index = 0;
@@ -161,8 +176,63 @@ public class ChecklistManager : MonoBehaviour
         taskObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp); });
     }
 
-   
-    void Update()
+    /// <summary>
+    /// called when Edit button(attached to target task) is pressed;
+    /// transfers data from target task to edit panel
+    /// </summary>
+    public void TransferDataForEdit(GameObject task, string name, int reward)
     {
+        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
+        addInputFields[0].text = name;
+        addInputFields[1].text = reward.ToString();
+
+
+    }
+
+    /// <summary>
+    /// Called when SaveEdit button in edit panel is pressed;
+    /// Changes data in task that's edited
+    /// </summary>
+    public void EditTask(GameObject task)
+    {
+        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
+
+        //when task is finished editing
+        SwitchSaveButtonTo("SAVE");
+        editPanel.SetActive(false);
+    }
+    /// <summary>
+    /// Called when delete button pressed in edit panel of edit mode
+    /// </summary>
+    public void DeleteTask(GameObject task)
+    {
+        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
+        deleteTaskButton.SetActive(true);
+        checklistObjects.Remove(taskObject);
+        Destroy(task);
+        SwitchSaveButtonTo("SAVE") ;
+        deleteTaskButton.SetActive(false);
+    }
+    public void DeleteHistoryTask(GameObject historyTask)
+    {
+        ChecklistObject historyTaskObject = historyTask.GetComponent<ChecklistObject>();
+        checklistObjects.Remove(historyTaskObject);
+        Destroy(historyTask);
+    }
+    /// <summary>
+    /// Just type in string, which Save button mode you want: ("SAVE") or ("EDIT")
+    /// </summary>
+    public void SwitchSaveButtonTo(string saveMode)
+    {
+        if (saveMode == "EDIT")
+        {
+            saveButtonObj.SetActive(false);
+            editSaveButtonObj.SetActive(true); 
+        }
+        else if (saveMode == "SAVE")
+        {
+            saveButtonObj.SetActive(true);
+            editSaveButtonObj.SetActive(false);
+        }
     }
 }
