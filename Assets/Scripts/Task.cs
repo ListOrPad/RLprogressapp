@@ -3,33 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ChecklistObject : MonoBehaviour
+public class Task : MonoBehaviour
 {
     internal int numberOfTask;
-    internal string objOnlyName;
-    public string objFullName;
+    internal string taskOnlyName;
+    public string taskFullName;
     public int reward;
     public int index;
 
-    private Text taskText;
+    internal Text taskText;
+
 
     void Start()
     {
         taskText = GetComponent<Text>();
-        taskText.text = objFullName;
+        taskText.text = taskFullName;
     }
 
-    public void SetObjectInfo(string name, int reward, int index)
+    public void SetTaskInfo(string name, int reward, int index)
     {
-        this.objOnlyName = name;
-        this.objFullName = $"{objOnlyName} {{{reward}}}";
+        this.taskOnlyName = name;
+        this.taskFullName = $"{taskOnlyName} {{{reward}}}";
         this.reward = reward;
         this.index = index;
     }
-    public void SetHistoryObjectInfo(string name, int reward, int index)
+    public void SetHistoryTaskInfo(string name, int reward, int index)
     {
-        this.objOnlyName = name;
-        this.objFullName = $"{numberOfTask}. {objOnlyName} {{{reward}}}";
+        this.taskOnlyName = name;
+        this.taskFullName = $"{numberOfTask}. {taskOnlyName} {{{reward}}}";
         this.reward = reward;
         this.index = index;
     }
@@ -37,7 +38,7 @@ public class ChecklistObject : MonoBehaviour
     /// <summary>
     /// Updates history numbering each time task is checked or unchecked
     /// </summary>
-    internal void SetHistoryNumbering(List<ChecklistObject> historyObjects)
+    internal void SetHistoryNumbering(List<Task> historyObjects)
     {
         GameObject history = GameObject.Find("History");
 
@@ -47,9 +48,9 @@ public class ChecklistObject : MonoBehaviour
 
         for (int i = 0; i < historyObjects.Count; i++)
         {
-            ChecklistObject historyObject = historyObjects[i];
+            Task historyObject = historyObjects[i];
             historyObject.numberOfTask = i + 1;
-            historyObject.taskText.text = $"{historyObject.numberOfTask}. {historyObject.objOnlyName} {{{historyObject.reward}}}";
+            historyObject.taskText.text = $"{historyObject.numberOfTask}. {historyObject.taskOnlyName} {{{historyObject.reward}}}";
         }
     }
 }

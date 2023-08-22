@@ -17,12 +17,12 @@ public class ChecklistManager : MonoBehaviour
 
     private string filepath;
 
-    private List<ChecklistObject> checklistObjects = new List<ChecklistObject> ();
-    private List<ChecklistObject> historyObjects = new List<ChecklistObject> ();
+    private List<Task> tasks = new List<Task> ();
+    private List<Task> historyTasks = new List<Task> ();
 
     private TMP_InputField[] addInputFields;
 
-    internal List<GameObject> tasks = new List<GameObject>();
+    internal List<GameObject> taskObjects = new List<GameObject>();
 
     [Header("History Toggle")]
     public Toggle historyToggle;
@@ -32,10 +32,14 @@ public class ChecklistManager : MonoBehaviour
     [Header("Edit task")]
     public GameObject saveButtonObj;
     public GameObject editSaveButtonObj;
-    public GameObject deleteTaskButton;
-    //public Button editButton;    // NOTE THIS ONE
     public Button editSaveButton;
+    public GameObject recycleBin;
+    public Button deleteTaskButton;
 
+    private List<Button> editButtonsCollection = new List<Button>();
+    //collecting data for edit button
+    private List<string> names = new List<string> ();
+    private List<int> rewards = new List<int> ();
 
     private void Start()
     {
@@ -45,6 +49,9 @@ public class ChecklistManager : MonoBehaviour
         saveButton.onClick.AddListener(delegate { CreateChecklistItem(addInputFields[0].text, TryParseInput(addInputFields[1].text)); } );
         historyToggle.onValueChanged.AddListener(delegate { ToggleHistoryVisibility(); } );
 
+        //maybe transfer later next line to somewhere where it can get taskObj var
+        //delete?
+        //editSaveButtonObj.GetComponent<Button>().onClick.AddListener(delegate { EditTask(); });
     }
 
     private int TryParseInput(string input)
@@ -106,27 +113,23 @@ public class ChecklistManager : MonoBehaviour
             return;
         }
 
-        GameObject task = Instantiate(checklistItemPrefab, content);
+        GameObject taskObject = Instantiate(checklistItemPrefab, content);
+        taskObject.transform.SetSiblingIndex(0);
 
-        //add a task on a list for wrapping 
-        //I probably dont need it(And 'tasks' var)
+        //prepare task for using edit button on task create, collecting data on lists
+        PrepareEditButtons(taskObject, name, reward);
+
+        //Manipulations with Task
+        Task task = taskObject.GetComponent<Task>();
+        int index = 0;
+        if(tasks.Count > 0)
+            index = tasks.Count - 1;
+        task.SetTaskInfo(name, reward, index);
         tasks.Add(task);
 
-        //prepare task for using edit button on task create
-        Button editButton = task.GetComponentInChildren<Button>();
-        editButton.onClick.AddListener(delegate { editPanel.SetActive(true); });
-        editButton.onClick.AddListener(delegate { TransferDataForEdit(task, name, reward); });
-        editButton.onClick.AddListener(delegate { SwitchSaveButtonTo("EDIT"); });
-
-        task.transform.SetSiblingIndex(0);
-        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
-        int index = 0;
-        if(checklistObjects.Count > 0)
-            index = checklistObjects.Count - 1;
-        taskObject.SetObjectInfo(name, reward, index);
-        checklistObjects.Add(taskObject);
-        ChecklistObject temp = taskObject;
-        taskObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp);});
+        //transfer data to history object on task check
+        Task temp = task;
+        task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp);});
 
         editPanel.SetActive(false);
     }
@@ -134,93 +137,117 @@ public class ChecklistManager : MonoBehaviour
     /// <summary>
     /// Transfers the task to the history
     /// </summary>
-    void CheckTask(ChecklistObject taskObject)
+    void CheckTask(Task taskObject)
     {
 
-        GameObject historyTask = Instantiate(historyItemPrefab, history);
-        historyTask.transform.SetSiblingIndex(0);
-        ChecklistObject historyObject = historyTask.GetComponent<ChecklistObject>();
+        GameObject historyTaskObject = Instantiate(historyItemPrefab, history);
+        historyTaskObject.transform.SetSiblingIndex(0);
+        Task historyTask = historyTaskObject.GetComponent<Task>();
         int index = 0;
-        if(historyObjects.Count > 0)
-            index = historyObjects.Count;  //may cause problems with index value(no -1)
-        historyObjects.Add(historyObject);
-        historyObject.SetHistoryNumbering(historyObjects);
-        historyObject.SetHistoryObjectInfo(taskObject.objOnlyName, taskObject.reward, index);
-        checklistObjects.Remove(taskObject);
+        if(historyTasks.Count > 0)
+            index = historyTasks.Count;  //may cause problems with index value(no -1)
+        historyTasks.Add(historyTask);
+        historyTask.SetHistoryNumbering(historyTasks);
+        historyTask.SetHistoryTaskInfo(taskObject.taskOnlyName, taskObject.reward, index);
+        tasks.Remove(taskObject);
         Destroy(taskObject.gameObject);
 
-        ChecklistObject temp = historyObject;
-        historyObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { UncheckTask(temp); });
+        Task temp = historyTask;
+        historyTask.GetComponent<Toggle>().onValueChanged.AddListener(delegate { UncheckTask(temp); });
     }
 
     /// <summary>
     /// Returns the history task back to the To-Do list
     /// </summary>
-    void UncheckTask(ChecklistObject historyObject)
+    void UncheckTask(Task historyTask)
     {
         
-        GameObject task = Instantiate(checklistItemPrefab, content);
-        task.transform.SetSiblingIndex(0);
-        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
+        GameObject taskObject = Instantiate(checklistItemPrefab, content);
+        taskObject.transform.SetSiblingIndex(0);
+        Task task = taskObject.GetComponent<Task>();
         int index = 0;
-        if(historyObjects.Count > 0)
-            index = historyObjects.Count - 1;
-        checklistObjects.Add(taskObject);
-        historyObjects.Remove(historyObject);
-        historyObject.SetHistoryNumbering(historyObjects);
-        taskObject.SetObjectInfo(historyObject.objOnlyName, historyObject.reward, index);
-        historyObject.SetHistoryObjectInfo(taskObject.objOnlyName, taskObject.reward, index);
-        Destroy(historyObject.gameObject);
+        if(historyTasks.Count > 0)
+            index = historyTasks.Count - 1;
+        tasks.Add(task);
+        historyTasks.Remove(historyTask);
+        historyTask.SetHistoryNumbering(historyTasks);
+        task.SetTaskInfo(historyTask.taskOnlyName, historyTask.reward, index);
+        historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
+        Destroy(historyTask.gameObject);
 
-        ChecklistObject temp = taskObject;
-        taskObject.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp); });
+        Task temp = task;
+        task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp); });
+    }
+
+    public void PrepareEditButtons(GameObject taskObject, string name, int reward)
+    {
+        taskObjects.Add(taskObject);
+        names.Add(name);
+        rewards.Add(reward);
+
+        names.Reverse();
+        rewards.Reverse();
+
+        for (int i = 0; i < taskObjects.Count; i++)
+        {
+            editButtonsCollection.Add(taskObjects[i].GetComponentInChildren<Button>());
+
+            int index = i;
+            editButtonsCollection[i].onClick.AddListener(delegate { editPanel.SetActive(true); });
+            editButtonsCollection[i].onClick.AddListener(delegate { recycleBin.SetActive(true); });
+            editButtonsCollection[i].onClick.AddListener(delegate { SwitchSaveButtonTo("EDIT"); });
+            editButtonsCollection[i].onClick.AddListener(delegate { TransferDataForEdit(taskObjects[index], names[index], rewards[index]); });
+        }
     }
 
     /// <summary>
     /// called when Edit button(attached to target task) is pressed;
     /// transfers data from target task to edit panel
     /// </summary>
-    public void TransferDataForEdit(GameObject task, string name, int reward)
+    public void TransferDataForEdit(GameObject taskObject, string name, int reward)
     {
-        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
         addInputFields[0].text = name;
         addInputFields[1].text = reward.ToString();
-
-
+        editSaveButton.onClick.AddListener(delegate { EditTask(taskObject); });
+        deleteTaskButton.onClick.AddListener(delegate { DeleteTask(taskObject); });
     }
 
     /// <summary>
     /// Called when SaveEdit button in edit panel is pressed;
     /// Changes data in task that's edited
     /// </summary>
-    public void EditTask(GameObject task)
+    public void EditTask(GameObject taskObject)
     {
-        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
+        Task task = taskObject.GetComponent<Task>();
+        task.name = addInputFields[0].text;
+        task.reward = int.Parse(addInputFields[1].text);
+        task.taskText.text = addInputFields[0].text + $" {{{task.reward}}}";
 
         //when task is finished editing
         SwitchSaveButtonTo("SAVE");
+        recycleBin.SetActive(false);
         editPanel.SetActive(false);
     }
     /// <summary>
     /// Called when delete button pressed in edit panel of edit mode
     /// </summary>
-    public void DeleteTask(GameObject task)
+    public void DeleteTask(GameObject taskObject)
     {
-        ChecklistObject taskObject = task.GetComponent<ChecklistObject>();
-        deleteTaskButton.SetActive(true);
-        checklistObjects.Remove(taskObject);
-        Destroy(task);
-        SwitchSaveButtonTo("SAVE") ;
-        deleteTaskButton.SetActive(false);
+        Task task = taskObject.GetComponent<Task>();
+        tasks.Remove(task);
+        Destroy(taskObject.gameObject);
+        editPanel.SetActive(false);
+        SwitchSaveButtonTo("SAVE");
+        recycleBin.SetActive(false);
     }
     public void DeleteHistoryTask(GameObject historyTask)
     {
-        ChecklistObject historyTaskObject = historyTask.GetComponent<ChecklistObject>();
-        checklistObjects.Remove(historyTaskObject);
+        Task historyTaskObject = historyTask.GetComponent<Task>();
+        tasks.Remove(historyTaskObject);
         Destroy(historyTask);
     }
     /// <summary>
-    /// Just type in string, which Save button mode you want: ("SAVE") or ("EDIT")
+    /// Just type in string, which Save button(located in edit panel) mode you want: ("SAVE") or ("EDIT")
     /// </summary>
     public void SwitchSaveButtonTo(string saveMode)
     {
