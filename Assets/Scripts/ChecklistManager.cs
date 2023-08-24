@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class ChecklistManager : MonoBehaviour
 {
+    #region variables
     public Transform content;
     public GameObject editPanel;
     public Button saveButton;
@@ -41,6 +42,7 @@ public class ChecklistManager : MonoBehaviour
     private List<string> names = new List<string> ();
     private List<int> rewards = new List<int> ();
 
+    #endregion
     private void Start()
     {
         filepath = Application.persistentDataPath + "/checklist.txt";
@@ -50,7 +52,7 @@ public class ChecklistManager : MonoBehaviour
         historyToggle.onValueChanged.AddListener(delegate { ToggleHistoryVisibility(); } );
 
         //maybe transfer later next line to somewhere where it can get taskObj var
-        //delete?
+        //delete now?
         //editSaveButtonObj.GetComponent<Button>().onClick.AddListener(delegate { EditTask(); });
     }
 
@@ -152,6 +154,8 @@ public class ChecklistManager : MonoBehaviour
         tasks.Remove(taskObject);
         Destroy(taskObject.gameObject);
 
+        ///TransferDataForEdit(historyTaskObject,taskObject.taskOnlyName,taskObject.reward);
+
         Task temp = historyTask;
         historyTask.GetComponent<Toggle>().onValueChanged.AddListener(delegate { UncheckTask(temp); });
     }
@@ -196,18 +200,24 @@ public class ChecklistManager : MonoBehaviour
             editButtonsCollection[i].onClick.AddListener(delegate { editPanel.SetActive(true); });
             editButtonsCollection[i].onClick.AddListener(delegate { recycleBin.SetActive(true); });
             editButtonsCollection[i].onClick.AddListener(delegate { SwitchSaveButtonTo("EDIT"); });
-            editButtonsCollection[i].onClick.AddListener(delegate { TransferDataForEdit(taskObjects[index], names[index], rewards[index]); });
+            editButtonsCollection[i].onClick.AddListener(delegate { TransferDataForEdit(editButtonsCollection[index], taskObjects[index], names[index], rewards[index]); });
         }
     }
 
+    public void TransferDataAfterEdit(GameObject taskObject, string name, int reward)
+    {
+        addInputFields[0].text = name;
+        addInputFields[1].text = reward.ToString();
+    }
     /// <summary>
     /// called when Edit button(attached to target task) is pressed;
     /// transfers data from target task to edit panel
     /// </summary>
-    public void TransferDataForEdit(GameObject taskObject, string name, int reward)
+    public void TransferDataForEdit(Button editButton, GameObject taskObject, string name, int reward)
     {
         addInputFields[0].text = name;
         addInputFields[1].text = reward.ToString();
+        editButton.onClick.AddListener(delegate { });
         editSaveButton.onClick.AddListener(delegate { EditTask(taskObject); });
         deleteTaskButton.onClick.AddListener(delegate { DeleteTask(taskObject); });
     }
@@ -222,6 +232,9 @@ public class ChecklistManager : MonoBehaviour
         task.name = addInputFields[0].text;
         task.reward = int.Parse(addInputFields[1].text);
         task.taskText.text = addInputFields[0].text + $" {{{task.reward}}}";
+
+        //Button editButton = taskObject.GetComponent<Button>();\
+        //TransferDataForEdit(editButton, taskObject, task.name, task.reward); // like this?
 
         //when task is finished editing
         SwitchSaveButtonTo("SAVE");
@@ -240,10 +253,10 @@ public class ChecklistManager : MonoBehaviour
         SwitchSaveButtonTo("SAVE");
         recycleBin.SetActive(false);
     }
-    public void DeleteHistoryTask(GameObject historyTask)
+    public void DeleteHistoryTask(GameObject historyTaskObject)
     {
-        Task historyTaskObject = historyTask.GetComponent<Task>();
-        tasks.Remove(historyTaskObject);
+        Task historyTask = historyTaskObject.GetComponent<Task>();
+        tasks.Remove(historyTask);
         Destroy(historyTask);
     }
     /// <summary>
