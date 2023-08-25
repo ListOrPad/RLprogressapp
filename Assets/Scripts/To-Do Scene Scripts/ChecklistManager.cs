@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class ChecklistManager : MonoBehaviour
 {
-    #region variables
+    #region legacy
     public Transform content;
     public GameObject editPanel;
     public Button saveButton;
@@ -42,7 +42,6 @@ public class ChecklistManager : MonoBehaviour
     private List<string> names = new List<string> ();
     private List<int> rewards = new List<int> ();
 
-    #endregion
     private void Start()
     {
         filepath = Application.persistentDataPath + "/checklist.txt";
@@ -275,4 +274,5 @@ public class ChecklistManager : MonoBehaviour
             editSaveButtonObj.SetActive(false);
         }
     }
+    #endregion
 }

@@ -11,4 +11,13 @@ public class TaskEditor : MonoBehaviour
         
     }
 
+    public void TransferTaskForEdit(Task task, GameObject gameObject)
+    {
+
+    }
+
+    public void EditTask(Task task)
+    {
+
+    }
 }
