@@ -9,12 +9,18 @@ using UnityEngine.UI;
 public class ChecklistManager : MonoBehaviour
 {
     #region legacy
-    public Transform content;
-    public GameObject editPanel;
-    public Button saveButton;
-    public GameObject checklistItemPrefab;
-    public GameObject historyItemPrefab;
-    public Transform history;
+    [SerializeField]
+    private Transform content;
+    [SerializeField]
+    private GameObject editPanel;
+    [SerializeField]
+    private Button saveButton;
+    [SerializeField]
+    private GameObject checklistItemPrefab;
+    [SerializeField]
+    private GameObject historyItemPrefab;
+    [SerializeField]
+    private Transform history;
 
     private string filepath;
 
@@ -25,10 +31,7 @@ public class ChecklistManager : MonoBehaviour
 
     internal List<GameObject> taskObjects = new List<GameObject>();
 
-    [Header("History Toggle")]
-    public Toggle historyToggle;
-    public GameObject historyToggleObject;
-    public GameObject scrollViewHistory;
+    private TaskUpdater updater;
 
     [Header("Edit task")]
     public GameObject saveButtonObj;
@@ -44,15 +47,11 @@ public class ChecklistManager : MonoBehaviour
 
     private void Start()
     {
+        updater = gameObject.AddComponent<TaskUpdater>();
         filepath = Application.persistentDataPath + "/checklist.txt";
         addInputFields = editPanel.GetComponentsInChildren<TMP_InputField>();
 
         saveButton.onClick.AddListener(delegate { CreateChecklistItem(addInputFields[0].text, TryParseInput(addInputFields[1].text)); } );
-        historyToggle.onValueChanged.AddListener(delegate { ToggleHistoryVisibility(); } );
-
-        //maybe transfer later next line to somewhere where it can get taskObj var
-        //delete now?
-        //editSaveButtonObj.GetComponent<Button>().onClick.AddListener(delegate { EditTask(); });
     }
 
     private int TryParseInput(string input)
@@ -67,45 +66,6 @@ public class ChecklistManager : MonoBehaviour
         }
     }
 
-
-    /// <summary>
-    /// Moves history toggle to a new position; sets history list (in)visible; expands and compresses scroll view size; changes sprite
-    /// </summary>
-    private void ToggleHistoryVisibility()
-    {
-        if (scrollViewHistory.activeSelf == false)
-        {
-            //move history toggle up
-            historyToggleObject.GetComponent<RectTransform>().offsetMin = new Vector2(2f, 750f); //(left, bottom)
-            historyToggleObject.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 750f); //(-right, -top)
-            //set scrollview visible
-            scrollViewHistory.SetActive(true);
-            //compress base checklist scrollview size
-            GameObject scrollViewChecklist = GameObject.Find("Scroll View Checklist");
-            scrollViewChecklist.GetComponent<RectTransform>().offsetMin = new Vector2(-25f, 885.5f);
-            //change sprite
-            Sprite historyArrowEnabled = Resources.Load<Sprite>("Images/History Enabled Arrow");
-            Image[] imageComponentsInToggle = historyToggleObject.GetComponentsInChildren<Image>();
-            Image secondImageInToggle = imageComponentsInToggle[1];
-            secondImageInToggle.sprite = historyArrowEnabled;
-        }
-        else if (scrollViewHistory.activeSelf == true)
-        {
-            //move history toggle down
-            historyToggleObject.GetComponent<RectTransform>().offsetMin = new Vector2(1f, -1.5f); //(left, bottom)
-            historyToggleObject.GetComponent<RectTransform>().offsetMax = new Vector2(0f, -0.5f); //(-right, -top)
-            //set scrollview invisible
-            scrollViewHistory.SetActive(false);
-            //expand base checklist scrollview size
-            GameObject scrollViewChecklist = GameObject.Find("Scroll View Checklist");
-            scrollViewChecklist.GetComponent<RectTransform>().offsetMin = new Vector2(-25f, 194f);
-            //change sprite
-            Sprite historyArrowDisabled = Resources.Load<Sprite>("Images/History Disabled Arrow");
-            Image[] imageComponentsInToggle = historyToggleObject.GetComponentsInChildren<Image>();
-            Image secondImageInToggle = imageComponentsInToggle[1];
-            secondImageInToggle.sprite = historyArrowDisabled;
-        }
-    }
     void CreateChecklistItem(string name, int reward) 
     {
         if (name == "")
@@ -118,7 +78,7 @@ public class ChecklistManager : MonoBehaviour
         taskObject.transform.SetSiblingIndex(0);
 
         //prepare task for using edit button on task create, collecting data on lists
-        PrepareEditButtons(taskObject, name, reward);
+        //PrepareEditButtons(taskObject, name, reward);
 
         //Manipulations with Task
         Task task = taskObject.GetComponent<Task>();
@@ -148,7 +108,7 @@ public class ChecklistManager : MonoBehaviour
         if(historyTasks.Count > 0)
             index = historyTasks.Count;  //may cause problems with index value(no -1)
         historyTasks.Add(historyTask);
-        historyTask.SetHistoryNumbering(historyTasks);
+        updater.UpdateHistory(historyTasks);;
         historyTask.SetHistoryTaskInfo(taskObject.taskOnlyName, taskObject.reward, index);
         tasks.Remove(taskObject);
         Destroy(taskObject.gameObject);
@@ -173,7 +133,7 @@ public class ChecklistManager : MonoBehaviour
             index = historyTasks.Count - 1;
         tasks.Add(task);
         historyTasks.Remove(historyTask);
-        historyTask.SetHistoryNumbering(historyTasks);
+        updater.UpdateHistory(historyTasks);
         task.SetTaskInfo(historyTask.taskOnlyName, historyTask.reward, index);
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
         Destroy(historyTask.gameObject);
@@ -182,97 +142,6 @@ public class ChecklistManager : MonoBehaviour
         task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp); });
     }
 
-    public void PrepareEditButtons(GameObject taskObject, string name, int reward)
-    {
-        taskObjects.Add(taskObject);
-        names.Add(name);
-        rewards.Add(reward);
-
-        names.Reverse();
-        rewards.Reverse();
-
-        for (int i = 0; i < taskObjects.Count; i++)
-        {
-            editButtonsCollection.Add(taskObjects[i].GetComponentInChildren<Button>());
-
-            int index = i;
-            editButtonsCollection[i].onClick.AddListener(delegate { editPanel.SetActive(true); });
-            editButtonsCollection[i].onClick.AddListener(delegate { recycleBin.SetActive(true); });
-            editButtonsCollection[i].onClick.AddListener(delegate { SwitchSaveButtonTo("EDIT"); });
-            editButtonsCollection[i].onClick.AddListener(delegate { TransferDataForEdit(editButtonsCollection[index], taskObjects[index], names[index], rewards[index]); });
-        }
-    }
-
-    public void TransferDataAfterEdit(GameObject taskObject, string name, int reward)
-    {
-        addInputFields[0].text = name;
-        addInputFields[1].text = reward.ToString();
-    }
-    /// <summary>
-    /// called when Edit button(attached to target task) is pressed;
-    /// transfers data from target task to edit panel
-    /// </summary>
-    public void TransferDataForEdit(Button editButton, GameObject taskObject, string name, int reward)
-    {
-        addInputFields[0].text = name;
-        addInputFields[1].text = reward.ToString();
-        editButton.onClick.AddListener(delegate { });
-        editSaveButton.onClick.AddListener(delegate { EditTask(taskObject); });
-        deleteTaskButton.onClick.AddListener(delegate { DeleteTask(taskObject); });
-    }
-
-    /// <summary>
-    /// Called when SaveEdit button in edit panel is pressed;
-    /// Changes data in task that's edited
-    /// </summary>
-    public void EditTask(GameObject taskObject)
-    {
-        Task task = taskObject.GetComponent<Task>();
-        task.name = addInputFields[0].text;
-        task.reward = int.Parse(addInputFields[1].text);
-        task.taskText.text = addInputFields[0].text + $" {{{task.reward}}}";
-
-        //Button editButton = taskObject.GetComponent<Button>();\
-        //TransferDataForEdit(editButton, taskObject, task.name, task.reward); // like this?
-
-        //when task is finished editing
-        SwitchSaveButtonTo("SAVE");
-        recycleBin.SetActive(false);
-        editPanel.SetActive(false);
-    }
-    /// <summary>
-    /// Called when delete button pressed in edit panel of edit mode
-    /// </summary>
-    public void DeleteTask(GameObject taskObject)
-    {
-        Task task = taskObject.GetComponent<Task>();
-        tasks.Remove(task);
-        Destroy(taskObject.gameObject);
-        editPanel.SetActive(false);
-        SwitchSaveButtonTo("SAVE");
-        recycleBin.SetActive(false);
-    }
-    public void DeleteHistoryTask(GameObject historyTaskObject)
-    {
-        Task historyTask = historyTaskObject.GetComponent<Task>();
-        tasks.Remove(historyTask);
-        Destroy(historyTask);
-    }
-    /// <summary>
-    /// Just type in string, which Save button(located in edit panel) mode you want: ("SAVE") or ("EDIT")
-    /// </summary>
-    public void SwitchSaveButtonTo(string saveMode)
-    {
-        if (saveMode == "EDIT")
-        {
-            saveButtonObj.SetActive(false);
-            editSaveButtonObj.SetActive(true); 
-        }
-        else if (saveMode == "SAVE")
-        {
-            saveButtonObj.SetActive(true);
-            editSaveButtonObj.SetActive(false);
-        }
-    }
+   
     #endregion
 }

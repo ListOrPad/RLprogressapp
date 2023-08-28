@@ -12,9 +12,12 @@ public class HistoryToggler : MonoBehaviour
     private GameObject historyToggleObject;
     [SerializeField]
     private GameObject scrollViewHistory;
-    private GameObject scrollViewChecklist = GameObject.Find("Scroll View Checklist");
+
+    GameObject scrollViewChecklist;
+
     private void Start()
     {
+        scrollViewChecklist = GameObject.Find("Scroll View Checklist");
         historyToggle.onValueChanged.AddListener(delegate { ToggleHistoryVisibility(); });
     }
 

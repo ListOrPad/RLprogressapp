@@ -1392,6 +1392,7 @@ GameObject:
   m_Component:
   - component: {fileID: 447691062}
   - component: {fileID: 447691061}
+  - component: {fileID: 447691063}
   m_Layer: 0
   m_Name: ChecklistManager
   m_TagString: Untagged
@@ -1417,11 +1418,9 @@ MonoBehaviour:
   checklistItemPrefab: {fileID: 7195707815320649623, guid: 7deeb1e6355309547bd3f89602453866, type: 3}
   historyItemPrefab: {fileID: 4769593076817460262, guid: 65cfe6cfdcedcc345b596065c405517d, type: 3}
   history: {fileID: 1193879957}
-  historyToggle: {fileID: 263672459}
-  historyToggleObject: {fileID: 263672457}
-  scrollViewHistory: {fileID: 63119927}
   saveButtonObj: {fileID: 1740636478}
   editSaveButtonObj: {fileID: 925541283}
+  editSaveButton: {fileID: 0}
   recycleBin: {fileID: 231322206}
   deleteTaskButton: {fileID: 231322208}
 --- !u!4 &447691062
@@ -1439,6 +1438,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &447691063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447691060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fb1adcf1f0e9a042919733ac9502d92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  historyToggle: {fileID: 263672459}
+  historyToggleObject: {fileID: 263672457}
+  scrollViewHistory: {fileID: 63119927}
 --- !u!1 &451676760
 GameObject:
   m_ObjectHideFlags: 0
@@ -3585,7 +3599,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.19125001, y: 0.87936574}
   m_AnchorMax: {x: 0.83750004, y: 0.9642963}
-  m_AnchoredPosition: {x: -11.500076, y: 0.5}
+  m_AnchoredPosition: {x: -11.499954, y: 0.5}
   m_SizeDelta: {x: 5.7247925, y: -4.1118164}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1437526064
