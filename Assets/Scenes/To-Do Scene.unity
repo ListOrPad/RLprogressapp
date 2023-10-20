@@ -1393,6 +1393,8 @@ GameObject:
   - component: {fileID: 447691062}
   - component: {fileID: 447691061}
   - component: {fileID: 447691063}
+  - component: {fileID: 447691064}
+  - component: {fileID: 447691065}
   m_Layer: 0
   m_Name: ChecklistManager
   m_TagString: Untagged
@@ -1418,11 +1420,6 @@ MonoBehaviour:
   checklistItemPrefab: {fileID: 7195707815320649623, guid: 7deeb1e6355309547bd3f89602453866, type: 3}
   historyItemPrefab: {fileID: 4769593076817460262, guid: 65cfe6cfdcedcc345b596065c405517d, type: 3}
   history: {fileID: 1193879957}
-  saveButtonObj: {fileID: 1740636478}
-  editSaveButtonObj: {fileID: 925541283}
-  editSaveButton: {fileID: 0}
-  recycleBin: {fileID: 231322206}
-  deleteTaskButton: {fileID: 231322208}
 --- !u!4 &447691062
 Transform:
   m_ObjectHideFlags: 0
@@ -1453,6 +1450,36 @@ MonoBehaviour:
   historyToggle: {fileID: 263672459}
   historyToggleObject: {fileID: 263672457}
   scrollViewHistory: {fileID: 63119927}
+--- !u!114 &447691064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447691060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da1a43f5b22d539488c7bccca0335961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &447691065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 447691060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00c9ec1190a574a418d4590371bd2ef8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveButtonObj: {fileID: 1740636478}
+  editSaveButtonObj: {fileID: 925541283}
+  editSaveButton: {fileID: 925541284}
+  editPanel: {fileID: 549543762}
+  recycleBin: {fileID: 231322206}
+  deleteTaskButton: {fileID: 231322208}
 --- !u!1 &451676760
 GameObject:
   m_ObjectHideFlags: 0

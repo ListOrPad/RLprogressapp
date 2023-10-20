@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class Task : MonoBehaviour
 {
-    #region Legacy
     internal int numberOfTask;
     internal string taskOnlyName;
     public string taskFullName;
@@ -35,5 +34,4 @@ public class Task : MonoBehaviour
         this.reward = reward;
         this.index = index;
     }
-    #endregion
 }

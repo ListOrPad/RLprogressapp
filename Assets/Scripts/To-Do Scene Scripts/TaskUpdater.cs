@@ -5,19 +5,6 @@ using UnityEngine.UI;
 
 public class TaskUpdater : MonoBehaviour
 {
-    private bool taskEdited;
-    private bool taskDeleted;
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        //UpdateHistory();
-        //UpdateTasks();
-    }
-
     /// <summary>
     /// Updates history numbering each time task is checked or unchecked
     /// </summary>
@@ -35,9 +22,5 @@ public class TaskUpdater : MonoBehaviour
             historyObject.numberOfTask = i + 1;
             historyObject.taskText.text = $"{historyObject.numberOfTask}. {historyObject.taskOnlyName} {{{historyObject.reward}}}";
         }
-    }
-    internal void UpdateTasks()
-    {
-
     }
 }

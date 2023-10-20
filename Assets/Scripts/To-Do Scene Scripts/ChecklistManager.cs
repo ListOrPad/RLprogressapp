@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class ChecklistManager : MonoBehaviour
 {
-    #region legacy
     [SerializeField]
     private Transform content;
     [SerializeField]
@@ -24,30 +23,19 @@ public class ChecklistManager : MonoBehaviour
 
     private string filepath;
 
-    private List<Task> tasks = new List<Task> ();
-    private List<Task> historyTasks = new List<Task> ();
+    private List<Task> tasks = new List<Task>();
 
+    public List<Task> Tasks { get  => tasks; set => tasks = value; }
+    private List<Task> historyTasks = new List<Task> ();
     private TMP_InputField[] addInputFields;
 
-    internal List<GameObject> taskObjects = new List<GameObject>();
-
     private TaskUpdater updater;
-
-    [Header("Edit task")]
-    public GameObject saveButtonObj;
-    public GameObject editSaveButtonObj;
-    public Button editSaveButton;
-    public GameObject recycleBin;
-    public Button deleteTaskButton;
-
-    private List<Button> editButtonsCollection = new List<Button>();
-    //collecting data for edit button
-    private List<string> names = new List<string> ();
-    private List<int> rewards = new List<int> ();
+    private EditManager editManager;
 
     private void Start()
     {
-        updater = gameObject.AddComponent<TaskUpdater>();
+        updater = GetComponent<TaskUpdater>();
+        editManager = GetComponent<EditManager>();
         filepath = Application.persistentDataPath + "/checklist.txt";
         addInputFields = editPanel.GetComponentsInChildren<TMP_InputField>();
 
@@ -66,7 +54,7 @@ public class ChecklistManager : MonoBehaviour
         }
     }
 
-    void CreateChecklistItem(string name, int reward) 
+    private void CreateChecklistItem(string name, int reward) 
     {
         if (name == "")
         {
@@ -78,15 +66,15 @@ public class ChecklistManager : MonoBehaviour
         taskObject.transform.SetSiblingIndex(0);
 
         //prepare task for using edit button on task create, collecting data on lists
-        //PrepareEditButtons(taskObject, name, reward);
+        editManager.PrepareEditButtons(taskObject, name, reward);
 
         //Manipulations with Task
         Task task = taskObject.GetComponent<Task>();
         int index = 0;
-        if(tasks.Count > 0)
-            index = tasks.Count - 1;
+        if(Tasks.Count > 0)
+            index = Tasks.Count - 1;
         task.SetTaskInfo(name, reward, index);
-        tasks.Add(task);
+        Tasks.Add(task);
 
         //transfer data to history object on task check
         Task temp = task;
@@ -98,7 +86,7 @@ public class ChecklistManager : MonoBehaviour
     /// <summary>
     /// Transfers the task to the history
     /// </summary>
-    void CheckTask(Task taskObject)
+    private void CheckTask(Task task)
     {
 
         GameObject historyTaskObject = Instantiate(historyItemPrefab, history);
@@ -109,11 +97,12 @@ public class ChecklistManager : MonoBehaviour
             index = historyTasks.Count;  //may cause problems with index value(no -1)
         historyTasks.Add(historyTask);
         updater.UpdateHistory(historyTasks);;
-        historyTask.SetHistoryTaskInfo(taskObject.taskOnlyName, taskObject.reward, index);
-        tasks.Remove(taskObject);
-        Destroy(taskObject.gameObject);
+        historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
+        Tasks.Remove(task);
+        editManager.taskObjects.Remove(task.gameObject);
+        Destroy(task.gameObject);
 
-        ///TransferDataForEdit(historyTaskObject,taskObject.taskOnlyName,taskObject.reward);
+        //TransferDataForEdit(historyTaskObject,taskObject.taskOnlyName,taskObject.reward);
 
         Task temp = historyTask;
         historyTask.GetComponent<Toggle>().onValueChanged.AddListener(delegate { UncheckTask(temp); });
@@ -122,7 +111,7 @@ public class ChecklistManager : MonoBehaviour
     /// <summary>
     /// Returns the history task back to the To-Do list
     /// </summary>
-    void UncheckTask(Task historyTask)
+    private void UncheckTask(Task historyTask)
     {
         
         GameObject taskObject = Instantiate(checklistItemPrefab, content);
@@ -131,17 +120,15 @@ public class ChecklistManager : MonoBehaviour
         int index = 0;
         if(historyTasks.Count > 0)
             index = historyTasks.Count - 1;
-        tasks.Add(task);
+        Tasks.Add(task);
         historyTasks.Remove(historyTask);
         updater.UpdateHistory(historyTasks);
         task.SetTaskInfo(historyTask.taskOnlyName, historyTask.reward, index);
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
+        editManager.taskObjects.Add(historyTask.gameObject);
         Destroy(historyTask.gameObject);
 
         Task temp = task;
         task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp); });
     }
-
-   
-    #endregion
 }
