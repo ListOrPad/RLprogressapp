@@ -28,20 +28,20 @@ public class EditManager : MonoBehaviour
     /// <summary>
     /// When creating a task, prepare its edit button for interaction
     /// </summary>
-    public void PrepareEditButtons(Task task, GameObject taskObject, string name, int reward)
+    public void PrepareEditButtons(Task task, GameObject taskObject)
     {
         Button editButton = taskObject.GetComponentInChildren<Button>();
-        AddEditEvents(task, editButton, name, reward);
+        AddEditEvents(task, editButton);
     }
 
-    private void AddEditEvents(Task task, Button editButton, string name, int reward)
+    private void AddEditEvents(Task task, Button editButton)
     {
         editButton.onClick.AddListener(() =>
         {
             editPanel.SetActive(true);
             recycleBin.SetActive(true);
             SwitchSaveButtonTo("EDIT");
-            TransferDataForEdit(task, name, reward);
+            TransferDataForEdit(task);
         });
     }
 
@@ -49,11 +49,11 @@ public class EditManager : MonoBehaviour
     /// called when Edit button(attached to target task) is pressed;
     /// transfers data from target task to edit panel
     /// </summary>
-    public void TransferDataForEdit(Task task, string name, int reward)
+    public void TransferDataForEdit(Task task)
     {
         //Transfer name and reward
-        addInputFields[0].text = name;
-        addInputFields[1].text = reward.ToString();
+        addInputFields[0].text = task.taskOnlyName;
+        addInputFields[1].text = task.reward.ToString();
 
         editSaveButton.onClick.RemoveAllListeners();
         //add events that call edit or delete operations when corresponding buttons are pressed

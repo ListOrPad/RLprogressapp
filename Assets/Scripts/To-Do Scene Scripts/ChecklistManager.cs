@@ -68,7 +68,7 @@ public class ChecklistManager : MonoBehaviour
         Task task = taskObject.GetComponent<Task>();
 
         //prepare task for using edit button on task create, collecting data on lists
-        editManager.PrepareEditButtons(task, taskObject, name, reward);
+        editManager.PrepareEditButtons(task, taskObject);
 
         int index = 0;
         if(Tasks.Count > 0)
@@ -123,6 +123,7 @@ public class ChecklistManager : MonoBehaviour
         historyTasks.Remove(historyTask);
         updater.UpdateHistory(historyTasks);
         task.SetTaskInfo(historyTask.taskOnlyName, historyTask.reward, index);
+        editManager.PrepareEditButtons(task, taskObject);
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
         Destroy(historyTask.gameObject);
 
