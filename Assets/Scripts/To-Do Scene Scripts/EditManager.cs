@@ -17,14 +17,8 @@ public class EditManager : MonoBehaviour
     [SerializeField] private GameObject recycleBin;
     [SerializeField] private Button deleteTaskButton;
 
-    //collecting data for edit button
     private TMP_InputField[] addInputFields;
-    private List<string> names = new List<string>();
-    private List<int> rewards = new List<int>();
-    private List<Button> editButtons = new List<Button>();
-    private ChecklistManager manager;
-
-    internal List<GameObject> taskObjects = new List<GameObject>();
+    private ChecklistManager manager = new ChecklistManager();
 
     void Start()
     {
@@ -34,87 +28,60 @@ public class EditManager : MonoBehaviour
     /// <summary>
     /// When creating a task, prepare its edit button for interaction
     /// </summary>
-    public void PrepareEditButtons(GameObject taskObject, string name, int reward)
+    public void PrepareEditButtons(Task task, GameObject taskObject, string name, int reward)
     {
-        //Add data to lists
-        taskObjects.Add(taskObject);
-        names.Add(name);
-        rewards.Add(reward);
+        Button editButton = taskObject.GetComponentInChildren<Button>();
+        AddEditEvents(task, editButton, name, reward);
+    }
 
-        //Reverse lists
-        names.Reverse();
-        rewards.Reverse();
-
-        for (int i = 0; i < taskObjects.Count; i++)
+    private void AddEditEvents(Task task, Button editButton, string name, int reward)
+    {
+        editButton.onClick.AddListener(() =>
         {
-            //Get next taskobject's edit button in list and add it to editButtons list
-            editButtons.Add(taskObjects[i].GetComponentInChildren<Button>());
-
-            //Add events to next editButton in list that are called when user presses edit button
-            AddEditEvents(i);
-        }
+            editPanel.SetActive(true);
+            recycleBin.SetActive(true);
+            SwitchSaveButtonTo("EDIT");
+            TransferDataForEdit(task, name, reward);
+        });
     }
 
-    private void AddEditEvents(int index)
-    {
-        editButtons[index].onClick.AddListener(delegate { editPanel.SetActive(true); });
-        editButtons[index].onClick.AddListener(delegate { recycleBin.SetActive(true); });
-        editButtons[index].onClick.AddListener(delegate { SwitchSaveButtonTo("EDIT"); });
-        //###BUG: он добавился дважды+, этот ивент, поэтому метод вызывается несколько раз, типа два отдельных одинаковых ивента
-        //получается добавился на одну кнопку? Так не должно быть...
-        editButtons[index].onClick.AddListener(delegate { TransferDataForEdit(taskObjects[index], names[index], rewards[index]); });
-    }
-
-    public void TransferDataAfterEdit(string name, int reward)
-    {
-        addInputFields[0].text = name;
-        addInputFields[1].text = reward.ToString();
-    }
     /// <summary>
     /// called when Edit button(attached to target task) is pressed;
     /// transfers data from target task to edit panel
     /// </summary>
-    public void TransferDataForEdit(GameObject taskObject, string name, int reward)
+    public void TransferDataForEdit(Task task, string name, int reward)
     {
         //Transfer name and reward
         addInputFields[0].text = name;
         addInputFields[1].text = reward.ToString();
+
+        editSaveButton.onClick.RemoveAllListeners();
         //add events that call edit or delete operations when corresponding buttons are pressed
-        editSaveButton.onClick.AddListener(delegate { EditTask(taskObject); });
-        deleteTaskButton.onClick.AddListener(delegate { DeleteTask(taskObject); });
+        editSaveButton.onClick.AddListener(delegate { EditTask(task); });
+        deleteTaskButton.onClick.AddListener(delegate { DeleteTask(task); });
     }
 
     /// <summary>
     /// Called when SaveEdit button in edit panel is pressed;
     /// Changes data in task that's edited
     /// </summary>
-    public void EditTask(GameObject taskObject)
+    public void EditTask(Task task)
     {
-        Task task = taskObject.GetComponent<Task>();
-        task.name = addInputFields[0].text;
-        task.reward = int.Parse(addInputFields[1].text);
+        task.SetTaskInfo(addInputFields[0].text, int.Parse(addInputFields[1].text), task.index);
         task.taskText.text = addInputFields[0].text + $" {{{task.reward}}}";
 
-        //Button editButton = taskObject.GetComponent<Button>();
-        //TransferDataForEdit(editButton, taskObject, task.name, task.reward); // like this?
-
         //when task is finished editing
-        SwitchSaveButtonTo("SAVE");
-        recycleBin.SetActive(false);
-        editPanel.SetActive(false);
+        FinalizeEdit();
     }
 
     /// <summary>
     /// Called when delete button pressed in edit mode
     /// </summary>
-    public void DeleteTask(GameObject taskObject)
+    public void DeleteTask(Task task)
     {
-        Task task = taskObject.GetComponent<Task>();
         manager.Tasks.Remove(task);
-        Destroy(taskObject.gameObject);
-        editPanel.SetActive(false);
-        SwitchSaveButtonTo("SAVE");
-        recycleBin.SetActive(false);
+        Destroy(task.gameObject);
+        FinalizeEdit();
     }
 
     //public void DeleteHistoryTask(GameObject historyTaskObject)
@@ -123,6 +90,13 @@ public class EditManager : MonoBehaviour
     //    tasks.Remove(historyTask);
     //    Destroy(historyTask);
     //}
+
+    private void FinalizeEdit()
+    {
+        SwitchSaveButtonTo("SAVE");
+        recycleBin.SetActive(false);
+        editPanel.SetActive(false);
+    }
 
     /// <summary>
     /// Just type in string, which Save button(located in edit panel) mode you want: ("SAVE") or ("EDIT")

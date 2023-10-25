@@ -65,11 +65,11 @@ public class ChecklistManager : MonoBehaviour
         GameObject taskObject = Instantiate(checklistItemPrefab, content);
         taskObject.transform.SetSiblingIndex(0);
 
-        //prepare task for using edit button on task create, collecting data on lists
-        editManager.PrepareEditButtons(taskObject, name, reward);
-
-        //Manipulations with Task
         Task task = taskObject.GetComponent<Task>();
+
+        //prepare task for using edit button on task create, collecting data on lists
+        editManager.PrepareEditButtons(task, taskObject, name, reward);
+
         int index = 0;
         if(Tasks.Count > 0)
             index = Tasks.Count - 1;
@@ -99,7 +99,6 @@ public class ChecklistManager : MonoBehaviour
         updater.UpdateHistory(historyTasks);;
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
         Tasks.Remove(task);
-        editManager.taskObjects.Remove(task.gameObject);
         Destroy(task.gameObject);
 
         //TransferDataForEdit(historyTaskObject,taskObject.taskOnlyName,taskObject.reward);
@@ -125,7 +124,6 @@ public class ChecklistManager : MonoBehaviour
         updater.UpdateHistory(historyTasks);
         task.SetTaskInfo(historyTask.taskOnlyName, historyTask.reward, index);
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
-        editManager.taskObjects.Add(historyTask.gameObject);
         Destroy(historyTask.gameObject);
 
         Task temp = task;
