@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,17 +68,16 @@ public class ChecklistManager : MonoBehaviour
         Task task = taskObject.GetComponent<Task>();
 
         //prepare task for using edit button on task create, collecting data on lists
-        editManager.PrepareEditButtons(task, taskObject);
 
         int index = 0;
         if(Tasks.Count > 0)
             index = Tasks.Count - 1;
         task.SetTaskInfo(name, reward, index);
         Tasks.Add(task);
+        editManager.PrepareEditButtons(task, taskObject);
 
         //transfer data to history object on task check
-        Task temp = task;
-        task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp);});
+        task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(task);});
 
         editPanel.SetActive(false);
     }
@@ -101,10 +100,7 @@ public class ChecklistManager : MonoBehaviour
         Tasks.Remove(task);
         Destroy(task.gameObject);
 
-        //TransferDataForEdit(historyTaskObject,taskObject.taskOnlyName,taskObject.reward);
-
-        Task temp = historyTask;
-        historyTask.GetComponent<Toggle>().onValueChanged.AddListener(delegate { UncheckTask(temp); });
+        historyTask.GetComponent<Toggle>().onValueChanged.AddListener(delegate { UncheckTask(historyTask); });
     }
 
     /// <summary>
@@ -127,7 +123,6 @@ public class ChecklistManager : MonoBehaviour
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
         Destroy(historyTask.gameObject);
 
-        Task temp = task;
-        task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(temp); });
+        task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(task); });
     }
 }

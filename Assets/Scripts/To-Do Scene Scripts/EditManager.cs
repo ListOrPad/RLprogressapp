@@ -56,6 +56,7 @@ public class EditManager : MonoBehaviour
         addInputFields[1].text = task.reward.ToString();
 
         editSaveButton.onClick.RemoveAllListeners();
+        deleteTaskButton.onClick.RemoveAllListeners();
         //add events that call edit or delete operations when corresponding buttons are pressed
         editSaveButton.onClick.AddListener(delegate { EditTask(task); });
         deleteTaskButton.onClick.AddListener(delegate { DeleteTask(task); });
@@ -79,8 +80,8 @@ public class EditManager : MonoBehaviour
     /// </summary>
     public void DeleteTask(Task task)
     {
-        manager.Tasks.Remove(task);
         Destroy(task.gameObject);
+        manager.Tasks.Remove(task);
         FinalizeEdit();
     }
 
