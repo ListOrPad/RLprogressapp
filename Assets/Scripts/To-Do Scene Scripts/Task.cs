@@ -13,6 +13,12 @@ public class Task : MonoBehaviour
 
     internal Text taskText;
 
+    public Task(string taskFullName, int reward, int index)
+    {
+        this.taskFullName = taskFullName;
+        this.reward = reward;
+        this.index = index;
+    }
 
     void Start()
     {
@@ -34,4 +40,6 @@ public class Task : MonoBehaviour
         this.reward = reward;
         this.index = index;
     }
+
+    
 }
