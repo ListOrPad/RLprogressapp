@@ -18,10 +18,13 @@ public class EditManager : MonoBehaviour
     [SerializeField] private Button deleteTaskButton;
 
     private TMP_InputField[] addInputFields;
+
+    [SerializeField] private GameObject checklistManagerObject;
     private ChecklistManager manager = new ChecklistManager();
 
     void Start()
     {
+        manager = checklistManagerObject.GetComponent<ChecklistManager>();
         addInputFields = editPanel.GetComponentsInChildren<TMP_InputField>();
     }
 
@@ -82,6 +85,7 @@ public class EditManager : MonoBehaviour
     {
         Destroy(task.gameObject);
         manager.Tasks.Remove(task);
+        manager.SaveJSONData(manager.Tasks);
         FinalizeEdit();
     }
 

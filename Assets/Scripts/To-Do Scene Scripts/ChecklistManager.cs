@@ -15,8 +15,8 @@ public class ChecklistManager : MonoBehaviour
     [SerializeField] private GameObject historyItemPrefab;
     [SerializeField] private Transform history;
 
-    private string filepath;
-    private string historyFilepath;
+    public string filepath;
+    public string historyFilepath;
 
     private List<Task> tasks = new List<Task>();
 
@@ -86,7 +86,7 @@ public class ChecklistManager : MonoBehaviour
 
         if(!loading)
         {
-            SaveJSONData();
+            SaveJSONData(Tasks);
         }
     }
 
@@ -106,7 +106,7 @@ public class ChecklistManager : MonoBehaviour
         updater.UpdateHistory(historyTasks);;
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
         Tasks.Remove(task);
-        SaveJSONData();
+        SaveJSONData(Tasks);
         SaveJSONHistoryData();
         Destroy(task.gameObject);
 
@@ -131,20 +131,20 @@ public class ChecklistManager : MonoBehaviour
         editManager.PrepareEditButtons(task, taskObject);
         historyTask.SetHistoryTaskInfo(task.taskOnlyName, task.reward, index);
         historyTasks.Remove(historyTask);
-        SaveJSONData();
+        SaveJSONData(Tasks);
         SaveJSONHistoryData();
         Destroy(historyTask.gameObject);
 
         task.GetComponent<Toggle>().onValueChanged.AddListener(delegate { CheckTask(task); });
     }
 
-    private void SaveJSONData()
+    public void SaveJSONData(List<Task> tasks)
     {
         string contents = "";
 
-        for (int i = 0; i < Tasks.Count; i++)
+        for (int i = 0; i < tasks.Count; i++)
         {
-            TaskItem temp = new TaskItem(Tasks[i].taskOnlyName, Tasks[i].reward, Tasks[i].index);
+            TaskItem temp = new TaskItem(tasks[i].taskOnlyName, tasks[i].reward, tasks[i].index);
             contents += JsonUtility.ToJson(temp) + "\n";
         }
 
