@@ -1420,6 +1420,8 @@ MonoBehaviour:
   checklistItemPrefab: {fileID: 7195707815320649623, guid: 7deeb1e6355309547bd3f89602453866, type: 3}
   historyItemPrefab: {fileID: 4769593076817460262, guid: 65cfe6cfdcedcc345b596065c405517d, type: 3}
   history: {fileID: 1193879957}
+  filepath: 
+  historyFilepath: 
 --- !u!4 &447691062
 Transform:
   m_ObjectHideFlags: 0
@@ -1480,6 +1482,7 @@ MonoBehaviour:
   editPanel: {fileID: 549543762}
   recycleBin: {fileID: 231322206}
   deleteTaskButton: {fileID: 231322208}
+  checklistManagerObject: {fileID: 447691060}
 --- !u!1 &451676760
 GameObject:
   m_ObjectHideFlags: 0
