@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
-using UnityEngine.Sprites;
 using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
@@ -26,17 +25,18 @@ public class Timer : MonoBehaviour
     public Sprite pauseSprite;
     public Sprite playSprite;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private bool soundHasRun = false;
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (timerActive)
         {
+            if (!soundHasRun)
+            {
+                FindObjectOfType<SoundManager>().PlaySound("Ticking");
+                soundHasRun = true;
+            }
             currentTime = countDown ? currentTime -= Time.deltaTime : currentTime += Time.deltaTime;
 
             if (hasLimit && (countDown && currentTime <= timerLimit))
@@ -58,11 +58,17 @@ public class Timer : MonoBehaviour
 
     public void StartPauseTimer()
     {
+        if(soundHasRun)
+        {
+            FindObjectOfType<SoundManager>().StopSound("Ticking");
+            soundHasRun = false;
+        }
         timerActive = !timerActive;
         button.image.sprite = timerActive ? pauseSprite : playSprite;
     }
     public void StopTimer()
     {
+        soundHasRun = true;
         timerActive = false;
         //here should be displayed menu of what to do with the session etc.
     }

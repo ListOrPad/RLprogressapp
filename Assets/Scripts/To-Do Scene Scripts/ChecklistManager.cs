@@ -15,8 +15,8 @@ public class ChecklistManager : MonoBehaviour
     [SerializeField] private GameObject historyItemPrefab;
     [SerializeField] private Transform history;
 
-    public string filepath;
-    public string historyFilepath;
+    [HideInInspector]public string filepath;
+    [HideInInspector]public string historyFilepath;
 
     private List<Task> tasks = new List<Task>();
 

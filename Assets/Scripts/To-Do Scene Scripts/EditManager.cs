@@ -19,6 +19,7 @@ public class EditManager : MonoBehaviour
 
     private TMP_InputField[] addInputFields;
 
+    [Header("Checklist Manager")]
     [SerializeField] private GameObject checklistManagerObject;
     private ChecklistManager manager = new ChecklistManager();
 
