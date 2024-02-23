@@ -68,7 +68,11 @@ public class Timer : MonoBehaviour
     }
     public void StopTimer()
     {
-        soundHasRun = true;
+        if (soundHasRun)
+        {
+            FindObjectOfType<SoundManager>().StopSound("Ticking");
+            soundHasRun = false;
+        }
         timerActive = false;
         //here should be displayed menu of what to do with the session etc.
     }
