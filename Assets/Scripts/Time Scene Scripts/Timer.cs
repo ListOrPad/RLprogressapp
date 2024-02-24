@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    public bool timerActive = true;
+    public static bool timerActive;
 
     [Header("Component")]
     public TextMeshProUGUI timerText;
@@ -27,6 +27,10 @@ public class Timer : MonoBehaviour
 
     private bool soundHasRun = false;
 
+    private void Awake()
+    {
+        currentTime = PlayerPrefs.GetFloat("CurrentTime");
+    }
     // Update is called once per frame
     private void Update()
     {
@@ -38,6 +42,9 @@ public class Timer : MonoBehaviour
                 soundHasRun = true;
             }
             currentTime = countDown ? currentTime -= Time.deltaTime : currentTime += Time.deltaTime;
+
+            //Save time across the scenes
+            PlayerPrefs.SetFloat("CurrentTime", currentTime);
 
             if (hasLimit && (countDown && currentTime <= timerLimit))
             {
@@ -75,5 +82,10 @@ public class Timer : MonoBehaviour
         }
         timerActive = false;
         //here should be displayed menu of what to do with the session etc.
+
+        //if(Discard Session or Save session)
+        //{
+        //    PlayerPrefs.DeleteKey("CurrentTime");
+        //}
     }
 }

@@ -6,20 +6,19 @@ using UnityEngine.UI;
 
 public class StartStop : MonoBehaviour
 {
-    public Sprite pauseSprite;
-    public Sprite playSprite;
-    private Timer timer;
+    //public Sprite pauseSprite;
+    //public Sprite playSprite;
 
-    void Start()
-    {
+    //void Start()
+    //{
         
-    }
-    void Update()
-    {
-        if (timer.timerActive == true)
-        {
-            timer.timerActive = false;
-        }
-    }
+    //}
+    //void Update()
+    //{
+    //    if (Timer.timerActive)
+    //    {
+    //        Timer.timerActive = false;
+    //    }
+    //}
 
 }

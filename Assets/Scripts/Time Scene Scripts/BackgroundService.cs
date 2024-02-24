@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BackgroundService : MonoBehaviour
@@ -16,8 +17,9 @@ public class BackgroundService : MonoBehaviour
 
     private void Awake()
     {
-        SendActivityReference(PackageName);
-        //PlaySound();  I need this?
+        StopService();
+        //SendActivityReference(PackageName);
+        //StartService();
     }
 
 
@@ -43,4 +45,27 @@ public class BackgroundService : MonoBehaviour
     {
         customClass.CallStatic(CustomClassPlaySoundMethod);
     }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        if (focus)
+        {
+            StopService();
+        }
+        else
+        {
+            SendActivityReference(PackageName);
+            StartService();
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (Timer.timerActive)
+        {
+            SendActivityReference(PackageName);
+            StartService();
+        }
+    }
+
 }
