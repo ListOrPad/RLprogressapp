@@ -10,26 +10,32 @@ public class Timer : MonoBehaviour
     public static bool timerActive;
 
     [Header("Component")]
-    public TextMeshProUGUI timerText;
+    [SerializeField] private TextMeshProUGUI timerText;
 
     [Header("TimerSettings")]
-    public float currentTime;
-    public bool countDown;
+    public static float currentTime;  //make static?
+    [SerializeField] private bool countDown;
 
     [Header("LimitSettings")]
-    public bool hasLimit;
-    public float timerLimit;
+    [SerializeField] private bool hasLimit;
+    [SerializeField] private float timerLimit;
 
     [Header("Start/Pause Settings")]
-    public Button button;
-    public Sprite pauseSprite;
-    public Sprite playSprite;
+    [SerializeField] private Button button;
+    [SerializeField] private Sprite pauseSprite;
+    [SerializeField] private Sprite playSprite;
 
     private bool soundHasRun = false;
 
     private void Awake()
     {
         currentTime = PlayerPrefs.GetFloat("CurrentTime");
+        GameObject[] timerObj = GameObject.FindGameObjectsWithTag("Sound");
+        if (timerObj.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
     }
     // Update is called once per frame
     private void Update()
@@ -56,6 +62,14 @@ public class Timer : MonoBehaviour
 
     public void SetTimerText()
     {
+        try
+        {
+            timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>();
+        }
+        catch(NullReferenceException)
+        {
+        
+        }
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         if (currentTime >= 3600)
             timerText.text = time.Hours.ToString() + ":" + time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00");
