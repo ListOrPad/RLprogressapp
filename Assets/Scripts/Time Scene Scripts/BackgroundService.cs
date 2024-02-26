@@ -8,7 +8,7 @@ public class BackgroundService : MonoBehaviour
     private AndroidJavaObject unityActivity;
     private AndroidJavaClass customClass;
 
-    private const string PackageName = "com.kdg.toast.plugin.Bridge";
+    private const string PackageName = "com.example.rlprogressservice";
     private const string UnityDefaultJavaClassName = "com.unity3d.player.UnityPlayer";
     private const string CustomClassReceiveActivityInstanceMethod = "ReceiveActivityInstance";
     private const string CustomClassStartServiceMethod = "StartService";
@@ -19,8 +19,8 @@ public class BackgroundService : MonoBehaviour
 
     private void Awake()
     {
+        SendActivityReference(PackageName);
         StopService();
-        //SendActivityReference(PackageName);
         //StartService();
     }
 
@@ -28,7 +28,7 @@ public class BackgroundService : MonoBehaviour
     private void SendActivityReference(string packageName)
     {
         unityClass = new AndroidJavaClass(UnityDefaultJavaClassName);
-        unityActivity = unityClass.GetStatic<AndroidJavaObject>("currentActivity");
+        unityActivity = unityClass.GetStatic<AndroidJavaObject>("myActivity");
         customClass = new AndroidJavaClass(packageName);
         customClass.CallStatic(CustomClassReceiveActivityInstanceMethod, unityActivity);
     }
@@ -50,14 +50,27 @@ public class BackgroundService : MonoBehaviour
 
     private void OnApplicationFocus(bool focus)
     {
-        if (focus)
-        {
-            StopService();
-        }
-        else
+        if (!focus && Timer.timerActive)
         {
             SendActivityReference(PackageName);
             StartService();
+        }
+        else
+        {
+            StopService();
+        }
+    }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if(pause && Timer.timerActive)
+        {
+            SendActivityReference(PackageName);
+            StartService();
+        }
+        else
+        {
+            StopService();
         }
     }
 

@@ -21,7 +21,7 @@ public class Timer : MonoBehaviour
     [SerializeField] private float timerLimit;
 
     [Header("Start/Pause Settings")]
-    [SerializeField] private Button button;
+    [SerializeField] private Button pausePlayButton;
     [SerializeField] private Sprite pauseSprite;
     [SerializeField] private Sprite playSprite;
 
@@ -37,7 +37,7 @@ public class Timer : MonoBehaviour
         }
         DontDestroyOnLoad(this.gameObject);
     }
-    // Update is called once per frame
+
     private void Update()
     {
         if (timerActive)
@@ -60,16 +60,10 @@ public class Timer : MonoBehaviour
         SetTimerText();
     }
 
+    
     public void SetTimerText()
     {
-        try
-        {
-            timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>();
-        }
-        catch(NullReferenceException)
-        {
-        
-        }
+        RefreshBinds();
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         if (currentTime >= 3600)
             timerText.text = time.Hours.ToString() + ":" + time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00");
@@ -85,7 +79,7 @@ public class Timer : MonoBehaviour
             soundHasRun = false;
         }
         timerActive = !timerActive;
-        button.image.sprite = timerActive ? pauseSprite : playSprite;
+        pausePlayButton.image.sprite = timerActive ? pauseSprite : playSprite;
     }
     public void StopTimer()
     {
@@ -101,5 +95,37 @@ public class Timer : MonoBehaviour
         //{
         //    PlayerPrefs.DeleteKey("CurrentTime");
         //}
+    }
+    private void RefreshBinds()
+    {
+        try
+        {
+            timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>();
+            pausePlayButton = GameObject.Find("Pause/Play Button").GetComponent<Button>();
+            //If has no onClick events then add startPauseTimer event to button
+            if (!HasOnClickListeners(pausePlayButton))
+            {
+                pausePlayButton.onClick.AddListener(delegate { StartPauseTimer(); });
+            }
+        }
+        catch (NullReferenceException)
+        {
+
+        }
+    }
+    private bool HasOnClickListeners(Button button)
+    {
+        if (button != null)
+        {
+            // Get the UnityEvent associated with the button's OnClick event
+            UnityEngine.Events.UnityEvent onClickEvent = button.onClick;
+
+            // Check if the event has any listeners
+            Debug.Log("True");
+            return onClickEvent.GetPersistentEventCount() > 0;
+        }
+
+        Debug.Log("False");
+        return false;
     }
 }
