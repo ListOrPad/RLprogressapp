@@ -30,7 +30,7 @@ public class Timer : MonoBehaviour
     private void Awake()
     {
         currentTime = PlayerPrefs.GetFloat("CurrentTime");
-        GameObject[] timerObj = GameObject.FindGameObjectsWithTag("Sound");
+        GameObject[] timerObj = GameObject.FindGameObjectsWithTag("Timer");
         if (timerObj.Length > 1)
         {
             Destroy(this.gameObject);
@@ -63,7 +63,14 @@ public class Timer : MonoBehaviour
     
     public void SetTimerText()
     {
-        RefreshBinds();
+        try
+        {
+            timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>();
+        }
+        catch (NullReferenceException)
+        {
+
+        }
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         if (currentTime >= 3600)
             timerText.text = time.Hours.ToString() + ":" + time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00");
@@ -96,36 +103,8 @@ public class Timer : MonoBehaviour
         //    PlayerPrefs.DeleteKey("CurrentTime");
         //}
     }
-    private void RefreshBinds()
+    private void SetPausePlayButton()
     {
-        try
-        {
-            timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>();
-            pausePlayButton = GameObject.Find("Pause/Play Button").GetComponent<Button>();
-            //If has no onClick events then add startPauseTimer event to button
-            if (!HasOnClickListeners(pausePlayButton))
-            {
-                pausePlayButton.onClick.AddListener(delegate { StartPauseTimer(); });
-            }
-        }
-        catch (NullReferenceException)
-        {
-
-        }
-    }
-    private bool HasOnClickListeners(Button button)
-    {
-        if (button != null)
-        {
-            // Get the UnityEvent associated with the button's OnClick event
-            UnityEngine.Events.UnityEvent onClickEvent = button.onClick;
-
-            // Check if the event has any listeners
-            Debug.Log("True");
-            return onClickEvent.GetPersistentEventCount() > 0;
-        }
-
-        Debug.Log("False");
-        return false;
+        pausePlayButton.onClick.AddListener(delegate { StartPauseTimer(); });
     }
 }
