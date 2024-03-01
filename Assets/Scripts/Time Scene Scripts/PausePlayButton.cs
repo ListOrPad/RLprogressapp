@@ -7,6 +7,10 @@ public class PausePlayButton : MonoBehaviour
     {
         GameObject GOtimer = GameObject.Find("Timer");
         Timer timer = GOtimer.GetComponent<Timer>();
+        if (timer.pausePlayButton == null)
+        {
+            timer.pausePlayButton = GameObject.Find("Pause/Play Button").GetComponent<Button>();
+        }
         this.gameObject.GetComponent<Button>().onClick.AddListener(delegate { timer.StartPauseTimer(); });
     }
 }

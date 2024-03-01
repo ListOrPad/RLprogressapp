@@ -21,11 +21,12 @@ public class Timer : MonoBehaviour
     [SerializeField] private float timerLimit;
 
     [Header("Start/Pause Settings")]
-    [SerializeField] private Button pausePlayButton;
+    [SerializeField] public Button pausePlayButton;
     [SerializeField] private Sprite pauseSprite;
     [SerializeField] private Sprite playSprite;
 
     private bool soundHasRun = false;
+    public bool SoundHasRun { get { return soundHasRun; } set { soundHasRun = value; } }
 
     private void Awake()
     {
@@ -98,13 +99,27 @@ public class Timer : MonoBehaviour
         timerActive = false;
         //here should be displayed menu of what to do with the session etc.
 
-        //if(Discard Session or Save session)
-        //{
-        //    PlayerPrefs.DeleteKey("CurrentTime");
-        //}
+        if (DiscardSession() || SaveSession())
+        {
+            timerText.text = string.Empty;
+            PlayerPrefs.DeleteKey("CurrentTime");
+        }
     }
-    private void SetPausePlayButton()
+    public bool DiscardSession()
     {
-        pausePlayButton.onClick.AddListener(delegate { StartPauseTimer(); });
+        //write: Are you sure you want to discard?
+        bool discard = false; //could be string
+        if (discard)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    public bool SaveSession()
+    {
+        return false;
     }
 }
