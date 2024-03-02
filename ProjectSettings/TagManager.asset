@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Sound
   - Timer
+  - Hidden
   layers:
   - Default
   - TransparentFX

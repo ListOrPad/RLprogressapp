@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ public class Timer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
 
     [Header("TimerSettings")]
-    public static float currentTime;  //make static?
+    public static float currentTime;
     [SerializeField] private bool countDown;
 
     [Header("LimitSettings")]
@@ -24,6 +25,8 @@ public class Timer : MonoBehaviour
     [SerializeField] public Button pausePlayButton;
     [SerializeField] private Sprite pauseSprite;
     [SerializeField] private Sprite playSprite;
+    [Header("Session Management")]
+    [SerializeField] private SessionManager sessionManager;
 
     private bool soundHasRun = false;
     public bool SoundHasRun { get { return soundHasRun; } set { soundHasRun = value; } }
@@ -58,20 +61,25 @@ public class Timer : MonoBehaviour
                 currentTime = timerLimit;
             }
         }
-        SetTimerText();
+        RefreshBinds();
+        SetTimerText(); // thats the problem here, shouldn't be in update
     }
 
-    
-    public void SetTimerText()
+    private void RefreshBinds()
     {
         try
         {
-            timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>();
+            timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>(); // thats the problem here, shouldn't be in update
+            sessionManager = GameObject.Find("SessionManager").GetComponent<SessionManager>();
         }
         catch (NullReferenceException)
         {
 
         }
+    }
+    public void SetTimerText()
+    {
+        
         TimeSpan time = TimeSpan.FromSeconds(currentTime);
         if (currentTime >= 3600)
             timerText.text = time.Hours.ToString() + ":" + time.Minutes.ToString("00") + ":" + time.Seconds.ToString("00");
@@ -99,23 +107,31 @@ public class Timer : MonoBehaviour
         timerActive = false;
         //here should be displayed menu of what to do with the session etc.
 
-        if (DiscardSession() || SaveSession())
+        //if (DiscardSession() || SaveSession())
+        //{
+        //    timerText.text = string.Empty;
+        //    PlayerPrefs.DeleteKey("CurrentTime");
+        //}
+    }
+
+    public void PrepareDiscardSession()
+    {
+        GameObject discardSessionMenu = sessionManager.discardSessionMenu;
+        discardSessionMenu.SetActive(true);
+        Button[] confirmButtons = discardSessionMenu.GetComponentsInChildren<Button>();
+        confirmButtons[0].onClick.AddListener(delegate { DiscardSession(true); });
+        confirmButtons[1].onClick.AddListener(delegate { DiscardSession(false); });
+    }
+    public void DiscardSession(bool discard)
+    {
+        if (discard)
         {
             timerText.text = string.Empty;
             PlayerPrefs.DeleteKey("CurrentTime");
         }
-    }
-    public bool DiscardSession()
-    {
-        //write: Are you sure you want to discard?
-        bool discard = false; //could be string
-        if (discard)
-        {
-            return true;
-        }
         else
         {
-            return false;
+            StartPauseTimer();
         }
     }
     public bool SaveSession()
