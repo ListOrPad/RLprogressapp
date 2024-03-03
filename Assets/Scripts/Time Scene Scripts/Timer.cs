@@ -67,6 +67,7 @@ public class Timer : MonoBehaviour
 
     private void RefreshBinds()
     {
+        
         try
         {
             timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>(); // thats the problem here, shouldn't be in update
@@ -75,6 +76,11 @@ public class Timer : MonoBehaviour
         catch (NullReferenceException)
         {
 
+        }
+        GameObject discardSessionButton = sessionManager.discardSessionButton;
+        if (discardSessionButton != null)
+        {
+            discardSessionButton.GetComponent<Button>().onClick.AddListener(delegate { PrepareDiscardSession(); });
         }
     }
     public void SetTimerText()
@@ -126,12 +132,9 @@ public class Timer : MonoBehaviour
     {
         if (discard)
         {
-            timerText.text = string.Empty;
             PlayerPrefs.DeleteKey("CurrentTime");
-        }
-        else
-        {
-            StartPauseTimer();
+            currentTime = 0;
+            StopTimer();
         }
     }
     public bool SaveSession()

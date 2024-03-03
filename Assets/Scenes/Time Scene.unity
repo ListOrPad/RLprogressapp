@@ -766,6 +766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   discardSessionMenu: {fileID: 15930243}
+  discardSessionButton: {fileID: 490190141}
 --- !u!1 &338288732
 GameObject:
   m_ObjectHideFlags: 0
