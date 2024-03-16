@@ -141,4 +141,18 @@ public class Timer : MonoBehaviour
     {
         return false;
     }
+
+    private void OnApplicationPause(bool pause)
+    {
+        if (pause && timerActive)
+        {
+            PlayerPrefs.SetString("TimeOfPause", DateTime.Now.ToBinary().ToString());
+        }
+        else
+        {
+            var timeQuitApp = DateTime.FromBinary(long.Parse(PlayerPrefs.GetString("TimeOfPause")));
+            var timeEnterApp = DateTime.Now;
+            currentTime += (float)(timeEnterApp - timeQuitApp).TotalSeconds;
+        }
+    }
 }

@@ -1,58 +1,50 @@
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BackgroundService : MonoBehaviour
 {
     private AndroidJavaClass unityClass;
     private AndroidJavaObject unityActivity;
-    private AndroidJavaClass customClass;
+    private AndroidJavaClass bridgeClass;
 
-    private const string PackageName = "com.example.rlprogressservice";
+    private const string BridgeClassName = "com.myapplication.rlprogressapp.Bridge";
     private const string UnityDefaultJavaClassName = "com.unity3d.player.UnityPlayer";
-    private const string CustomClassReceiveActivityInstanceMethod = "ReceiveActivityInstance";
-    private const string CustomClassStartServiceMethod = "StartService";
-    private const string CustomClassStopServiceMethod = "StopService";
-    private const string CustomClassPlaySoundMethod = "PlaySound";
+    private const string BridgeReceiveActivityInstanceMethod = "ReceiveActivityInstance";
+    private const string BridgeStartServiceMethod = "StartService";
+    private const string BridgeStopServiceMethod = "StopService";
 
-
-
-    private void Awake()
+    private void Start()
     {
-        SendActivityReference(PackageName);
+        SendActivityReference();
         StopService();
-        //StartService();
     }
 
-
-    private void SendActivityReference(string packageName)
+    private void SendActivityReference()
     {
+        Debug.Log("SendActivityReference called");
         unityClass = new AndroidJavaClass(UnityDefaultJavaClassName);
-        unityActivity = unityClass.GetStatic<AndroidJavaObject>("myActivity");
-        customClass = new AndroidJavaClass(packageName);
-        customClass.CallStatic(CustomClassReceiveActivityInstanceMethod, unityActivity);
+        unityActivity = unityClass.GetStatic<AndroidJavaObject>("currentActivity");
+        bridgeClass = new AndroidJavaClass(BridgeClassName);
+        bridgeClass.CallStatic(BridgeReceiveActivityInstanceMethod, unityActivity);
     }
 
     public void StartService()
     {
-        customClass.CallStatic(CustomClassStartServiceMethod);
-        PlaySound();
+        Debug.Log("StartService called");
+        bridgeClass.CallStatic(BridgeStartServiceMethod);
     }
 
     public void StopService()
     {
-        customClass.CallStatic(CustomClassStopServiceMethod);
-    }
-    public void PlaySound()
-    {
-        customClass.CallStatic(CustomClassPlaySoundMethod);
+        Debug.Log("StopService called");
+        bridgeClass.CallStatic(BridgeStopServiceMethod);
     }
 
     private void OnApplicationFocus(bool focus)
     {
+        Debug.Log("OnApplicationFocus called with: " + focus);
         if (!focus && Timer.timerActive)
         {
-            SendActivityReference(PackageName);
+            SendActivityReference();
             StartService();
         }
         else
@@ -63,9 +55,9 @@ public class BackgroundService : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        if(pause && Timer.timerActive)
+        if (pause && Timer.timerActive)
         {
-            SendActivityReference(PackageName);
+            SendActivityReference();
             StartService();
         }
         else
@@ -78,9 +70,8 @@ public class BackgroundService : MonoBehaviour
     {
         if (Timer.timerActive)
         {
-            SendActivityReference(PackageName);
+            SendActivityReference();
             StartService();
         }
     }
-
 }
