@@ -15,6 +15,7 @@ public class Timer : MonoBehaviour
 
     [Header("TimerSettings")]
     public static float currentTime;
+    private string timerSound = PlayerPrefs.GetString("TimerSound");
     [SerializeField] private bool countDown;
 
     [Header("LimitSettings")]
@@ -44,11 +45,19 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
+        string previousTimerSound = timerSound;
+        timerSound = PlayerPrefs.GetString("TimerSound");
+        //stop previous sound from playing, but don't if it's the same sound
+        if (timerSound != previousTimerSound)
+        {
+            FindObjectOfType<SoundManager>().StopSound(previousTimerSound);
+        }
+
         if (timerActive)
         {
             if (!soundHasRun)
             {
-                FindObjectOfType<SoundManager>().PlaySound("Ticking");
+                FindObjectOfType<SoundManager>().PlaySound(timerSound);
                 soundHasRun = true;
             }
             currentTime = countDown ? currentTime -= Time.deltaTime : currentTime += Time.deltaTime;
@@ -97,7 +106,7 @@ public class Timer : MonoBehaviour
     {
         if(soundHasRun)
         {
-            FindObjectOfType<SoundManager>().StopSound("Ticking");
+            FindObjectOfType<SoundManager>().StopSound(timerSound);
             soundHasRun = false;
         }
         timerActive = !timerActive;
@@ -107,7 +116,7 @@ public class Timer : MonoBehaviour
     {
         if (soundHasRun)
         {
-            FindObjectOfType<SoundManager>().StopSound("Ticking");
+            FindObjectOfType<SoundManager>().StopSound(timerSound);
             soundHasRun = false;
         }
         timerActive = false;

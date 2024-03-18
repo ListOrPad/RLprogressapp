@@ -2672,6 +2672,24 @@ MonoBehaviour:
     volume: 0.501
     pitch: 1.01
     source: {fileID: 0}
+  - name: Beach
+    loop: 1
+    clip: {fileID: 8300000, guid: 54cce57b7ef33e84e877835a1b70957e, type: 3}
+    volume: 0.501
+    pitch: 1.01
+    source: {fileID: 0}
+  - name: Birds
+    loop: 1
+    clip: {fileID: 8300000, guid: bb64bee3d8edd404bb637d9b4b8c3167, type: 3}
+    volume: 0.501
+    pitch: 1.01
+    source: {fileID: 0}
+  - name: Rain
+    loop: 1
+    clip: {fileID: 8300000, guid: 2f587df77fef2184a91055c4a5d3183c, type: 3}
+    volume: 0.501
+    pitch: 1.01
+    source: {fileID: 0}
 --- !u!4 &1071598341
 Transform:
   m_ObjectHideFlags: 0
