@@ -45,6 +45,7 @@ public class Timer : MonoBehaviour
 
     private void Update()
     {
+        //setup previous timer sound and new timer sound(if changed in settings)
         string previousTimerSound = timerSound;
         timerSound = PlayerPrefs.GetString("TimerSound");
         //stop previous sound from playing, but don't if it's the same sound
