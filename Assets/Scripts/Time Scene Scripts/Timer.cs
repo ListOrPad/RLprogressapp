@@ -27,7 +27,7 @@ public class Timer : MonoBehaviour
     [SerializeField] private Sprite pauseSprite;
     [SerializeField] private Sprite playSprite;
     [Header("Session Management")]
-    [SerializeField] private SessionManager sessionManager;
+    [SerializeField] private SessionFinish sessionFinisher;
 
     private bool soundHasRun = false;
     public bool SoundHasRun { get { return soundHasRun; } set { soundHasRun = value; } }
@@ -81,13 +81,13 @@ public class Timer : MonoBehaviour
         try
         {
             timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>(); // thats the problem here, shouldn't be in update
-            sessionManager = GameObject.Find("SessionManager").GetComponent<SessionManager>();
+            sessionFinisher = GameObject.Find("SessionManager").GetComponent<SessionFinish>();
         }
         catch (NullReferenceException)
         {
 
         }
-        GameObject discardSessionButton = sessionManager.discardSessionButton;
+        GameObject discardSessionButton = sessionFinisher.discardSessionButton;
         if (discardSessionButton != null)
         {
             discardSessionButton.GetComponent<Button>().onClick.AddListener(delegate { PrepareDiscardSession(); });
@@ -121,18 +121,11 @@ public class Timer : MonoBehaviour
             soundHasRun = false;
         }
         timerActive = false;
-        //here should be displayed menu of what to do with the session etc.
-
-        //if (DiscardSession() || SaveSession())
-        //{
-        //    timerText.text = string.Empty;
-        //    PlayerPrefs.DeleteKey("CurrentTime");
-        //}
     }
 
     public void PrepareDiscardSession()
     {
-        GameObject discardSessionMenu = sessionManager.discardSessionMenu;
+        GameObject discardSessionMenu = sessionFinisher.discardSessionMenu;
         discardSessionMenu.SetActive(true);
         Button[] confirmButtons = discardSessionMenu.GetComponentsInChildren<Button>();
         confirmButtons[0].onClick.AddListener(delegate { DiscardSession(true); });

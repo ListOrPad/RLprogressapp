@@ -1,13 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-public class SessionManager : MonoBehaviour
+public class SessionFinish : MonoBehaviour
 {
     public GameObject discardSessionMenu;
     public GameObject discardSessionButton;
 
-    private void Awake()
-    {
 
-    }
 }
