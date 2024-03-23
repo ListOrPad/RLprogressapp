@@ -111,7 +111,7 @@ public class Timer : MonoBehaviour
             soundHasRun = false;
         }
         timerActive = !timerActive;
-        pausePlayButton.image.sprite = timerActive ? pauseSprite : playSprite;
+        pausePlayButton.image.sprite = timerActive ? pauseSprite : playSprite; //transfer it to Update()? to fix bugs
     }
     public void StopTimer()
     {
@@ -142,6 +142,9 @@ public class Timer : MonoBehaviour
     }
     public bool SaveSession()
     {
+        PlayerPrefs.DeleteKey("CurrentTime");
+        currentTime = 0;
+        StopTimer();
         return false;
     }
 
