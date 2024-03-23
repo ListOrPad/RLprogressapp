@@ -732,7 +732,7 @@ GameObject:
   - component: {fileID: 290902749}
   - component: {fileID: 290902750}
   m_Layer: 0
-  m_Name: SessionManager
+  m_Name: SessionFinisher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -765,8 +765,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6784a08184e4594e8e1746328d38dc3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  discardSessionMenu: {fileID: 15930243}
+  finishSessionMenu: {fileID: 15930243}
   discardSessionButton: {fileID: 490190141}
+  saveSessionButton: {fileID: 32087406}
 --- !u!1 &338288732
 GameObject:
   m_ObjectHideFlags: 0
@@ -2235,7 +2236,7 @@ MonoBehaviour:
   pausePlayButton: {fileID: 569532390}
   pauseSprite: {fileID: 21300000, guid: fdeee4bdcbb43574ea640fa9ebc62a2c, type: 3}
   playSprite: {fileID: 21300000, guid: cd8fea2cbed161f4d83cec000d935eaa, type: 3}
-  sessionManager: {fileID: 290902750}
+  sessionFinisher: {fileID: 0}
 --- !u!4 &945835591
 Transform:
   m_ObjectHideFlags: 0

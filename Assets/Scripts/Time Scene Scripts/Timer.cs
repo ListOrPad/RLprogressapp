@@ -15,7 +15,7 @@ public class Timer : MonoBehaviour
 
     [Header("TimerSettings")]
     public static float currentTime;
-    private string timerSound = PlayerPrefs.GetString("TimerSound");
+    private string timerSound;
     [SerializeField] private bool countDown;
 
     [Header("LimitSettings")]
@@ -73,6 +73,8 @@ public class Timer : MonoBehaviour
         }
         RefreshBinds();
         SetTimerText(); // thats the problem here, shouldn't be in update
+        //changes pause sprite to play sprite and vice versa depending on if timer is active
+        pausePlayButton.image.sprite = timerActive ? pauseSprite : playSprite;
     }
 
     private void RefreshBinds()
@@ -81,16 +83,18 @@ public class Timer : MonoBehaviour
         try
         {
             timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>(); // thats the problem here, shouldn't be in update
-            sessionFinisher = GameObject.Find("SessionManager").GetComponent<SessionFinish>();
+            sessionFinisher = GameObject.Find("SessionFinisher").GetComponent<SessionFinish>();
         }
         catch (NullReferenceException)
         {
 
         }
         GameObject discardSessionButton = sessionFinisher.discardSessionButton;
+        GameObject saveSessionButton = sessionFinisher.saveSessionButton;
         if (discardSessionButton != null)
         {
             discardSessionButton.GetComponent<Button>().onClick.AddListener(delegate { PrepareDiscardSession(); });
+            saveSessionButton.GetComponent<Button>().onClick.AddListener(delegate { PrepareSaveSession(); });
         }
     }
     public void SetTimerText()
@@ -110,8 +114,8 @@ public class Timer : MonoBehaviour
             FindObjectOfType<SoundManager>().StopSound(timerSound);
             soundHasRun = false;
         }
+        //reverses timerActive var
         timerActive = !timerActive;
-        pausePlayButton.image.sprite = timerActive ? pauseSprite : playSprite; //transfer it to Update()? to fix bugs
     }
     public void StopTimer()
     {
@@ -125,7 +129,7 @@ public class Timer : MonoBehaviour
 
     public void PrepareDiscardSession()
     {
-        GameObject discardSessionMenu = sessionFinisher.discardSessionMenu;
+        GameObject discardSessionMenu = sessionFinisher.finishSessionMenu;
         discardSessionMenu.SetActive(true);
         Button[] confirmButtons = discardSessionMenu.GetComponentsInChildren<Button>();
         confirmButtons[0].onClick.AddListener(delegate { DiscardSession(true); });
@@ -140,12 +144,24 @@ public class Timer : MonoBehaviour
             StopTimer();
         }
     }
-    public bool SaveSession()
+
+    public void PrepareSaveSession()
     {
-        PlayerPrefs.DeleteKey("CurrentTime");
-        currentTime = 0;
-        StopTimer();
-        return false;
+        GameObject saveSessionMenu = sessionFinisher.finishSessionMenu;
+        saveSessionMenu.SetActive(true);
+        saveSessionMenu.GetComponentInChildren<TextMeshProUGUI>().text = "Sure want to finish by Saving?";
+        Button[] confirmButtons = saveSessionMenu.GetComponentsInChildren<Button>();
+        confirmButtons[0].onClick.AddListener(delegate { SaveSession(true); });
+        confirmButtons[1].onClick.AddListener(delegate { SaveSession(false); });
+    }
+    public void SaveSession(bool save)
+    {
+        if(save)
+        {
+            PlayerPrefs.DeleteKey("CurrentTime");
+            currentTime = 0;
+            StopTimer();
+        }
     }
 
     private void OnApplicationPause(bool pause)
