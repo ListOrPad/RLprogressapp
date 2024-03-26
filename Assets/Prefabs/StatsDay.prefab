@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 8089412515116275667}
   - component: {fileID: 8089412515116275677}
   - component: {fileID: 8089412515116275666}
-  - component: {fileID: 60768057420290066}
+  - component: {fileID: 7974206289698823416}
+  - component: {fileID: 8001136432237715342}
+  - component: {fileID: 4836940973809253546}
   m_Layer: 5
-  m_Name: Day
+  m_Name: StatsDay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,7 +69,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '22 Mar 24
+  m_text: 'Dy Mon Yr
 
 '
   m_isRightToLeft: 0
@@ -138,7 +140,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &60768057420290066
+--- !u!114 &7974206289698823416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089412515116275664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce6486e26ad9c348a7c5281d09f85cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sessionPrefab: {fileID: 8030640956223743246, guid: 344cc0ff78038d74197cb93ccb712119, type: 3}
+--- !u!114 &8001136432237715342
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,14 +168,28 @@ MonoBehaviour:
   m_Padding:
     m_Left: 0
     m_Right: 0
-    m_Top: 68
-    m_Bottom: 945
-  m_ChildAlignment: 3
-  m_Spacing: 104.19
+    m_Top: 90
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 135
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 1
+  m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &4836940973809253546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089412515116275664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2

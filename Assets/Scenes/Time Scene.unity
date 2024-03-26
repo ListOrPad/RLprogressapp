@@ -2236,7 +2236,7 @@ MonoBehaviour:
   pausePlayButton: {fileID: 569532390}
   pauseSprite: {fileID: 21300000, guid: fdeee4bdcbb43574ea640fa9ebc62a2c, type: 3}
   playSprite: {fileID: 21300000, guid: cd8fea2cbed161f4d83cec000d935eaa, type: 3}
-  sessionFinisher: {fileID: 0}
+  sessionFinisher: {fileID: 290902750}
 --- !u!4 &945835591
 Transform:
   m_ObjectHideFlags: 0

@@ -28,6 +28,7 @@ public class Timer : MonoBehaviour
     [SerializeField] private Sprite playSprite;
     [Header("Session Management")]
     [SerializeField] private SessionFinish sessionFinisher;
+    private DateTime startSessionTime;
 
     private bool soundHasRun = false;
     public bool SoundHasRun { get { return soundHasRun; } set { soundHasRun = value; } }
@@ -109,6 +110,10 @@ public class Timer : MonoBehaviour
 
     public void StartPauseTimer()
     {
+        if (currentTime == 0)
+        {
+            startSessionTime = DateTime.Now;
+        }
         if(soundHasRun)
         {
             FindObjectOfType<SoundManager>().StopSound(timerSound);
@@ -151,6 +156,12 @@ public class Timer : MonoBehaviour
         saveSessionMenu.SetActive(true);
         saveSessionMenu.GetComponentInChildren<TextMeshProUGUI>().text = "Sure want to finish by Saving?";
         Button[] confirmButtons = saveSessionMenu.GetComponentsInChildren<Button>();
+
+        // Remove all listeners(needed since it's connected to update method)
+        confirmButtons[0].onClick.RemoveAllListeners();
+        confirmButtons[1].onClick.RemoveAllListeners();
+
+        // Add new listeners
         confirmButtons[0].onClick.AddListener(delegate { SaveSession(true); });
         confirmButtons[1].onClick.AddListener(delegate { SaveSession(false); });
     }
@@ -158,6 +169,11 @@ public class Timer : MonoBehaviour
     {
         if(save)
         {
+            //imprint session in history
+            SessionData session = new SessionData(startSessionTime,"Gamedesign",currentTime); //instead of gamedesign should be something like settings.workspace
+            SessionDataHolder.Sessions.Add(session);
+
+            //finishing touches
             PlayerPrefs.DeleteKey("CurrentTime");
             currentTime = 0;
             StopTimer();

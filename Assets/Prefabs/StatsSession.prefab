@@ -306,7 +306,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 58, y: -25}
+  m_AnchoredPosition: {x: 58, y: -26}
   m_SizeDelta: {x: 53.6758, y: 39.904}
   m_Pivot: {x: 0.5, y: 0.50000006}
 --- !u!222 &1240595893336556613
@@ -550,8 +550,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8942849698579474007}
+  - component: {fileID: 2235868919819713896}
   m_Layer: 5
-  m_Name: Session
+  m_Name: StatsSession
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -581,6 +582,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 703.9469, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2235868919819713896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8030640956223743246}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638282f2c1ca7f54c8073cc062db1078, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeText: {fileID: 1248143662673727844}
+  startTimeText: {fileID: 4928805532815699099}
+  workspaceText: {fileID: 9153890928693255607}
 --- !u!1 &8604273820670760265
 GameObject:
   m_ObjectHideFlags: 0
