@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using TMPro;
 using UnityEngine;
 
 public class Day : MonoBehaviour
 {
     [SerializeField] private GameObject sessionPrefab;
+    [SerializeField] private TextMeshProUGUI dateText;
+    private DateTime date;
     //[SerializeField] private SessionManager sessionManager;
     private List<GameObject> sessions = new List<GameObject>();
 
@@ -18,22 +23,21 @@ public class Day : MonoBehaviour
         session.SetData(data);
 
         sessions.Add(newSession);
-
-        // Update the size and position of the day prefab
-        UpdateLayout();
     }
 
-    private void UpdateLayout()
+    private void Start()
     {
-        // Calculate the total height of all sessions
-        float totalHeight = 0;
-        foreach (GameObject session in sessions)
-        {
-            totalHeight += session.GetComponent<RectTransform>().sizeDelta.y;
-        }
+        // Set the date label
+        dateText.text = date.ToString("dd MMM yy", CultureInfo.InvariantCulture); // Format the DateTime as "day month year"
+    }
 
-        // Set the height of the day prefab
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, totalHeight);
+    public void SetDate(DateTime date)
+    {
+        this.date = date;
+    }
+
+    public DateTime GetDate()
+    {
+        return date;
     }
 }

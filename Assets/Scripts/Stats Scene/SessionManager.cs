@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class SessionManager : MonoBehaviour
 {
     public GameObject dayPrefab;
@@ -15,7 +12,6 @@ public class SessionManager : MonoBehaviour
     private void Awake()
     {
         currentDate = DateTime.Today;
-        CreateNewDay();
     }
     private void Start()
     {
@@ -23,28 +19,34 @@ public class SessionManager : MonoBehaviour
         {
             foreach (SessionData sessionData in SessionDataHolder.Sessions)
             {
-                // Instantiate a new session object
-                GameObject newSessionObject = Instantiate(sessionPrefab, today.transform);
-
-                // Get the Session component and set the data
-                Session session = newSessionObject.GetComponent<Session>();
-                session.SetData(sessionData);
+                AddSession(sessionData);
             }
         }
     }
 
     private void Update()
     {
-        if(currentDate < DateTime.Today)
+        if (currentDate < DateTime.Today)
         {
             currentDate = DateTime.Today;
-            CreateNewDay();
         }
     }
 
-    private void CreateNewDay()
+    private void CreateNewDay(DateTime date)
     {
         GameObject newDayObject = Instantiate(dayPrefab, content.transform);
         today = newDayObject.GetComponent<Day>();
+        today.SetDate(date); // Pass the date when creating a new day
+    }
+    public void AddSession(SessionData data)
+    {
+        // Check if a new day needs to be created
+        if (today == null || today.GetDate().Date != data.StartTime.Date)
+        {
+            CreateNewDay(data.StartTime.Date);
+        }
+
+        // Add the session to the current day
+        today.AddSession(data);
     }
 }

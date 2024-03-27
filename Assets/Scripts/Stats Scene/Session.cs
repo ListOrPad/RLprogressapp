@@ -24,7 +24,7 @@ public class Session : MonoBehaviour
         int durationInMinutes = Mathf.CeilToInt(data.Duration / 60f);
         // Update the session display here
         timeText.text = durationInMinutes.ToString();
-        startTimeText.text = data.StartTime.ToString();
+        startTimeText.text = data.StartTime.ToString("HH:mm");
         workspaceText.text = data.WorkspaceLabel;
     }
     
