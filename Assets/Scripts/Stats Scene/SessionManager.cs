@@ -41,9 +41,9 @@ public class SessionManager : MonoBehaviour
     public void AddSession(SessionData data)
     {
         // Check if a new day needs to be created
-        if (today == null || today.GetDate().Date != data.StartTime.Date)
+        if (today == null || today.GetDate().Date != data.GetStartTime().Date)
         {
-            CreateNewDay(data.StartTime.Date);
+            CreateNewDay(data.GetStartTime().Date);
         }
 
         // Add the session to the current day

@@ -171,7 +171,7 @@ public class Timer : MonoBehaviour
         {
             //imprint session in history
             SessionData session = new SessionData(startSessionTime,"Gamedesign",currentTime); //instead of gamedesign should be something like settings.workspace
-            SessionDataHolder.Sessions.Add(session);
+            SessionDataHolder.AddSession(session);
 
             //finishing touches
             PlayerPrefs.DeleteKey("CurrentTime");

@@ -10,7 +10,6 @@ public class Day : MonoBehaviour
     [SerializeField] private GameObject sessionPrefab;
     [SerializeField] private TextMeshProUGUI dateText;
     private DateTime date;
-    //[SerializeField] private SessionManager sessionManager;
     private List<GameObject> sessions = new List<GameObject>();
 
     public void AddSession(SessionData data)

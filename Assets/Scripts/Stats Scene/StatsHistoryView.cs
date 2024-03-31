@@ -21,7 +21,7 @@ public class StatsHistoryView : MonoBehaviour
         List<SessionData> sessions = GetSessionsForPeriod(period);
 
         // Group the sessions by day
-        var groupedSessions = sessions.GroupBy(s => s.StartTime.Date);
+        var groupedSessions = sessions.GroupBy(s => s.GetStartTime().Date);
 
         // Create a new Day prefab for each group and add the sessions to it
         foreach (var group in groupedSessions)

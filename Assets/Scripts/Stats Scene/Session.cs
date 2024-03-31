@@ -16,7 +16,7 @@ public class Session : MonoBehaviour
 
     public void SetData(SessionData data)
     {
-        startTime = data.StartTime;
+        startTime = data.GetStartTime();
         workspaceLabel = data.WorkspaceLabel;
         duration = data.Duration;
 
@@ -24,7 +24,7 @@ public class Session : MonoBehaviour
         int durationInMinutes = Mathf.CeilToInt(data.Duration / 60f);
         // Update the session display here
         timeText.text = durationInMinutes.ToString();
-        startTimeText.text = data.StartTime.ToString("HH:mm");
+        startTimeText.text = data.GetStartTime().ToString("HH:mm");
         workspaceText.text = data.WorkspaceLabel;
     }
     
