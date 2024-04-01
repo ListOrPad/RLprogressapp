@@ -6,21 +6,25 @@ using UnityEngine;
 [System.Serializable]
 public class SessionData
 {
-    public string StartTime { get; set; }
-    public string WorkspaceLabel { get; set; }
-    public float Duration { get; set; }
+    public string startTime;
+    public string workspace { get; set; }
+    public float duration { get; set; }
 
     public SessionData() { }
 
-    public SessionData(DateTime startTime, string workspaceLabel, float duration)
+    public SessionData(DateTime startTime, string workspace, float duration)
     {
-        StartTime = startTime.ToString("O");
-        WorkspaceLabel = workspaceLabel;
-        Duration = duration;
+        this.startTime = startTime.ToString("O");
+        this.workspace = workspace;
+        this.duration = duration;
     }
 
     public DateTime GetStartTime()
     {
-        return DateTime.Parse(StartTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
+        if (string.IsNullOrEmpty(startTime))
+        {
+            return DateTime.MinValue;
+        }
+        return DateTime.Parse(startTime, null, System.Globalization.DateTimeStyles.RoundtripKind);
     }
 }

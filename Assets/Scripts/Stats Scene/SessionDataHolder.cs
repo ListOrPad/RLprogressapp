@@ -23,9 +23,16 @@ public static class SessionDataHolder
 
     private static void SaveSessions()
     {
-        string json = JsonUtility.ToJson(new SerializationWrapper<SessionData> { Items = Sessions });
-        File.WriteAllText(filePath, json);
-        Debug.Log("Saved sessions: " + json); // Log the saved sessions
+        if (Sessions.Count > 0)
+        {
+            string json = JsonUtility.ToJson(new SerializationWrapper<SessionData> { Items = Sessions });
+            File.WriteAllText(filePath, json);
+            Debug.Log("Saved sessions: " + json); // Log the saved sessions
+        }
+        else
+        {
+            Debug.Log("No sessions to save."); // Log if there are no sessions to save
+        }
     }
 
     private static void LoadSessions()

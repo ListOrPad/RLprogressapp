@@ -2667,6 +2667,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
+  - name: No Sound
+    loop: 1
+    clip: {fileID: 0}
+    volume: 0
+    pitch: 1.01
+    source: {fileID: 0}
   - name: Ticking
     loop: 1
     clip: {fileID: 8300000, guid: 6c156b1780d15be4baafc4156cd0b664, type: 3}

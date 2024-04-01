@@ -7,7 +7,8 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    [SerializeField] private TMP_Dropdown timerSoundDropdown; 
+    [SerializeField] private TMP_Dropdown timerSoundDropdown;
+    private string currentWorkspace;
     // Start is called before the first frame update
     void Start()
     {

@@ -17,15 +17,15 @@ public class Session : MonoBehaviour
     public void SetData(SessionData data)
     {
         startTime = data.GetStartTime();
-        workspaceLabel = data.WorkspaceLabel;
-        duration = data.Duration;
+        workspaceLabel = data.workspace;
+        duration = data.duration;
 
         // Convert the duration from seconds to minutes and round up
-        int durationInMinutes = Mathf.CeilToInt(data.Duration / 60f);
+        int durationInMinutes = Mathf.CeilToInt(data.duration / 60f);
         // Update the session display here
         timeText.text = durationInMinutes.ToString();
         startTimeText.text = data.GetStartTime().ToString("HH:mm");
-        workspaceText.text = data.WorkspaceLabel;
+        workspaceText.text = data.workspace;
     }
     
 }
