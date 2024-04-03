@@ -17,7 +17,7 @@ public class Session : MonoBehaviour
     public void SetData(SessionData data)
     {
         startTime = data.GetStartTime();
-        workspaceLabel = data.workspace;
+        workspaceLabel = data.workspaceName;
         duration = data.duration;
 
         // Convert the duration from seconds to minutes and round up
@@ -25,7 +25,7 @@ public class Session : MonoBehaviour
         // Update the session display here
         timeText.text = durationInMinutes.ToString();
         startTimeText.text = data.GetStartTime().ToString("HH:mm");
-        workspaceText.text = data.workspace;
+        workspaceText.text = data.workspaceName;
     }
     
 }

@@ -169,8 +169,8 @@ public class Timer : MonoBehaviour
     {
         if(save)
         {
-            //imprint session in history
-            SessionData session = new SessionData(startSessionTime,"Gamedesign",currentTime); //instead of gamedesign should be something like settings.workspace
+            Workspace workspace = new Workspace("Gamedesign", 0); //this line is a placeholder
+            SessionData session = new SessionData(startSessionTime, workspace.name, currentTime);  //here, instead of 'workspace' var should be settings.workspace
             SessionDataHolder.AddSession(session);
 
             //finishing touches

@@ -7,15 +7,14 @@ using UnityEngine;
 public class SessionData
 {
     public string startTime;
-    public string workspace { get; set; }
-    public float duration { get; set; }
-
+    public string workspaceName;
+    public float duration;
     public SessionData() { }
 
-    public SessionData(DateTime startTime, string workspace, float duration)
+    public SessionData(DateTime startTime, string workspaceName, float duration)
     {
         this.startTime = startTime.ToString("O");
-        this.workspace = workspace;
+        this.workspaceName = workspaceName;
         this.duration = duration;
     }
 
