@@ -8,6 +8,8 @@ TagManager:
   - Timer
   - Hidden
   - SessionManager
+  - Settings
+  - Workspace Manager
   layers:
   - Default
   - TransparentFX

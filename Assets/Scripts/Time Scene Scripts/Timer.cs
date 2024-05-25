@@ -29,6 +29,9 @@ public class Timer : MonoBehaviour
     [Header("Session Management")]
     [SerializeField] private SessionFinish sessionFinisher;
     private DateTime startSessionTime;
+    private Workspace defaultWorkspace;
+    [SerializeField] private WorkspaceManager workspaceManager;
+    [SerializeField] private Settings settings;
 
     private bool soundHasRun = false;
     public bool SoundHasRun { get { return soundHasRun; } set { soundHasRun = value; } }
@@ -44,6 +47,11 @@ public class Timer : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
+    private void Start()
+    {
+        defaultWorkspace = workspaceManager.defaultWorkspace;
+        defaultWorkspace.Initialize();
+    }
     private void Update()
     {
         //setup previous timer sound and new timer sound(if changed in settings)
@@ -75,7 +83,14 @@ public class Timer : MonoBehaviour
         RefreshBinds();
         SetTimerText(); // thats the problem here, shouldn't be in update
         //changes pause sprite to play sprite and vice versa depending on if timer is active
-        pausePlayButton.image.sprite = timerActive ? pauseSprite : playSprite;
+        try
+        {
+            pausePlayButton.image.sprite = timerActive ? pauseSprite : playSprite;
+        }
+        catch
+        {
+
+        }
     }
 
     private void RefreshBinds()
@@ -85,6 +100,7 @@ public class Timer : MonoBehaviour
         {
             timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>(); // thats the problem here, shouldn't be in update
             sessionFinisher = GameObject.Find("SessionFinisher").GetComponent<SessionFinish>();
+            settings = GameObject.Find("Settings").GetComponent<Settings>();
         }
         catch (NullReferenceException)
         {
@@ -169,9 +185,8 @@ public class Timer : MonoBehaviour
     {
         if(save)
         {
-            Workspace workspace = new Workspace("Gamedesign", 0); //this line is a placeholder
-            SessionData session = new SessionData(startSessionTime, workspace.name, currentTime);  //here, instead of 'workspace' var should be settings.workspace
-            SessionDataHolder.AddSession(session);
+            SessionData session = new SessionData(startSessionTime, settings.GetWorkspace().name, currentTime);
+            settings.GetWorkspace().AddSession(session);
 
             //finishing touches
             PlayerPrefs.DeleteKey("CurrentTime");

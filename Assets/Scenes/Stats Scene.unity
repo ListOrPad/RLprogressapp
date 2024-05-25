@@ -1480,6 +1480,7 @@ MonoBehaviour:
   dayPrefab: {fileID: 8089412515116275664, guid: 952a89c6778af4a42987ee6a7a99d094, type: 3}
   sessionPrefab: {fileID: 8030640956223743246, guid: 344cc0ff78038d74197cb93ccb712119, type: 3}
   content: {fileID: 1603279946}
+  settings: {fileID: 536559333}
   today: {fileID: 0}
 --- !u!4 &242365725
 Transform:
@@ -2589,6 +2590,52 @@ RectTransform:
   m_AnchoredPosition: {x: -42.204575, y: 0}
   m_SizeDelta: {x: -84.4091, y: 149.9985}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!1 &536559332
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 536559334}
+  - component: {fileID: 536559333}
+  m_Layer: 0
+  m_Name: Settings
+  m_TagString: Settings
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &536559333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536559332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f051361772d92f41b2cb1172b90277e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerSoundDropdown: {fileID: 0}
+  currentWorkspaceDropdown: {fileID: 0}
+--- !u!4 &536559334
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 536559332}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 876.0557, y: 1243.8566, z: -3.8772428}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &578825852
 GameObject:
   m_ObjectHideFlags: 0

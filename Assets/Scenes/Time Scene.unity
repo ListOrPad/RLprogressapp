@@ -1984,6 +1984,108 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667967565}
   m_CullTransparentMesh: 1
+--- !u!1 &744134268
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 744134270}
+  - component: {fileID: 744134269}
+  m_Layer: 0
+  m_Name: Settings
+  m_TagString: Settings
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &744134269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744134268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f051361772d92f41b2cb1172b90277e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timerSoundDropdown: {fileID: 0}
+  currentWorkspaceDropdown: {fileID: 0}
+--- !u!4 &744134270
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744134268}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 876.0557, y: 1243.8566, z: -3.8772428}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &842031460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 842031462}
+  - component: {fileID: 842031461}
+  m_Layer: 0
+  m_Name: Workspace Manager
+  m_TagString: Workspace Manager
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &842031461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842031460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ab09520c91a2f4187f5b65ae03c2f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultWorkspace:
+    name: Default Workspace
+    storageValue: 0
+    sessions: []
+  workspaceDropdown: {fileID: 0}
+  OKButton: {fileID: 0}
+  addButton: {fileID: 0}
+  workspaceInputField: {fileID: 0}
+  workspacePrefab: {fileID: 0}
+  content: {fileID: 0}
+  addMenu: {fileID: 0}
+  deleteConfirmationMenu: {fileID: 0}
+--- !u!4 &842031462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842031460}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 286.48737, y: 1168.0386, z: -1.7558429}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &879872858
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,6 +2339,8 @@ MonoBehaviour:
   pauseSprite: {fileID: 21300000, guid: fdeee4bdcbb43574ea640fa9ebc62a2c, type: 3}
   playSprite: {fileID: 21300000, guid: cd8fea2cbed161f4d83cec000d935eaa, type: 3}
   sessionFinisher: {fileID: 290902750}
+  workspaceManager: {fileID: 842031461}
+  settings: {fileID: 744134269}
 --- !u!4 &945835591
 Transform:
   m_ObjectHideFlags: 0

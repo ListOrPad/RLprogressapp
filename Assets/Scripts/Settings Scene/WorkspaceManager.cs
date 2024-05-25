@@ -3,13 +3,17 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.IO;
 
 public class WorkspaceManager : MonoBehaviour
 {
-    private Workspace defaultWorkspace = new Workspace("Default Workspace", 0);
+    public Workspace defaultWorkspace = new Workspace();
     private List<Workspace> workspaces = new List<Workspace>();
     private List<string> workspacesNames = new List<string>();
-    [SerializeField] private TMP_Dropdown workspaceDropdown;
+
+    private static string workspacesFilepath;
+
     [SerializeField] private Button OKButton;
     [SerializeField] private Button addButton;
     [SerializeField] private TMP_InputField workspaceInputField;
@@ -17,34 +21,79 @@ public class WorkspaceManager : MonoBehaviour
     [SerializeField] private GameObject content;
     [SerializeField] private GameObject addMenu;
     [SerializeField] private GameObject deleteConfirmationMenu;
+    [SerializeField] private TMP_Dropdown workspaceDropdown;
 
+    //private void RefreshBinds()
+    //{
+    //    if (SceneManager.GetActiveScene().buildIndex == 5)
+    //    {
+    //        workspaceDropdown = GameObject.Find("Workspace Dropdown").GetComponent<TMP_Dropdown>();
+    //        addMenu = GameObject.Find("Add workspace menu"); //inactive gameobject, so wont find
+    //        addButton = GameObject.Find("\"Add\" button").GetComponent<Button>();
+    //        addButton.onClick.AddListener(delegate { ToggleAddMenu(); });
+    //        content = GameObject.Find("Content").GetComponent<GameObject>();
+    //        OKButton = GameObject.Find("\"OK\" button").GetComponent<Button>();
+    //        OKButton.onClick.AddListener(delegate { CreateWorkspace(); });
+    //        workspaceInputField = GameObject.Find("Add workspace menu").GetComponentInChildren<TMP_InputField>();
+    //        workspacePrefab = Resources.Load<GameObject>("Assets/Prefabs/Workspace");
+    //        deleteConfirmationMenu = GameObject.Find("Delete confirmation menu");
+    //    }
+    //}
+
+    private void Update()
+    {
+        try
+        {
+            //RefreshBinds();
+        }
+        catch
+        {
+
+        }
+    }
+    private void Awake()
+    {
+        //GameObject[] workspaceManagerObj = GameObject.FindGameObjectsWithTag("Workspace Manager");
+        //if (workspaceManagerObj.Length > 1)
+        //{
+        //    Destroy(this.gameObject);
+        //}
+        //DontDestroyOnLoad(this.gameObject);
+        workspacesFilepath = Path.Combine(Application.persistentDataPath, "_workspaces_list.json");
+    }
     void Start()
     {
-        if (!workspaces.Contains(defaultWorkspace))
+        LoadWorkspaceListFromJSON();
+
+        if (!workspaces.Exists(w => w.name == defaultWorkspace.name))
         {
             workspaces.Add(defaultWorkspace);
             workspacesNames.Add(defaultWorkspace.name);
+            SaveWorkspaceListToJSON();
         }
-        workspaceDropdown.ClearOptions();
-        workspaceDropdown.AddOptions(workspacesNames);
+
+        UpdateWorkspaceDropdown();
+
         OKButton.onClick.AddListener(delegate { CreateWorkspace(); });
         addButton.onClick.AddListener(delegate { ToggleAddMenu(); });
     }
 
     private void CreateWorkspace()
     {
-        if(workspaceInputField != null)
+        if(workspaceInputField != null && !string.IsNullOrWhiteSpace(workspaceInputField.text))
         {
             Workspace workspace = new Workspace(workspaceInputField.text, 0);
+            workspace.Initialize();
             GameObject workspaceObject = Instantiate(workspacePrefab, content.transform);
             workspaceObject.GetComponentInChildren<TextMeshProUGUI>().text = workspace.name;
             workspaces.Add(workspace);
+            SaveWorkspaceListToJSON();
             workspacesNames.Add(workspace.name);
-            //update Workspace Dropdown in settings 
-            workspaceDropdown.ClearOptions();
-            workspaceDropdown.AddOptions(workspacesNames);
+
             //prepare workspace for deleting
             workspaceObject.GetComponentInChildren<Button>().onClick.AddListener(() => { PrepareWorkspaceDelete(workspace, workspaceObject); });
+
+            UpdateWorkspaceDropdown();
             addMenu.SetActive(false);
         }
         else
@@ -53,11 +102,58 @@ public class WorkspaceManager : MonoBehaviour
         }
         
     }
+
+    private void SaveWorkspaceListToJSON()
+    {
+        WorkspaceList workspaceList = new WorkspaceList();
+        workspaceList.workspaces = workspaces;
+
+        string json = JsonUtility.ToJson(workspaceList);
+        File.WriteAllText(workspacesFilepath, json);
+        Debug.Log("Saved workspaces to JSON: " + json);
+    }
+
+    private void LoadWorkspaceListFromJSON()
+    {
+        if (File.Exists(workspacesFilepath))
+        {
+            string json = File.ReadAllText(workspacesFilepath);
+
+            if (!string.IsNullOrEmpty(json))
+            {
+                WorkspaceList data = JsonUtility.FromJson<WorkspaceList>(json);
+                Debug.Log("Loaded from JSON: " + data);
+
+                workspaces.Clear();
+                workspaces.AddRange(data.workspaces);
+                workspacesNames.Clear();
+                foreach (var workspace in workspaces)
+                {
+                    GameObject workspaceObject = Instantiate(workspacePrefab, content.transform);
+                    workspaceObject.GetComponentInChildren<TextMeshProUGUI>().text = workspace.name;
+                    workspacesNames.Add(workspace.name);
+
+                    //assign the delete button listener
+                    workspaceObject.GetComponentInChildren<Button>().onClick.AddListener(() => { PrepareWorkspaceDelete(workspace, workspaceObject); });
+                }
+            }
+            else
+            {
+                Debug.Log("JSON file is empty");
+            }
+        }
+        else
+        {
+            Debug.Log("JSON file does not exist at path: " + workspacesFilepath);
+        }
+    }
+
     private void PrepareWorkspaceDelete(Workspace workspace, GameObject workspaceObject)
     {
         deleteConfirmationMenu.SetActive(true);
         deleteConfirmationMenu.GetComponentInChildren<TextMeshProUGUI>().text = $"Sure want to delete the workspace \"{workspace.name}\"? it may lead to data loss";
         Button yesButton = deleteConfirmationMenu.GetComponentInChildren<Button>();
+        yesButton.onClick.RemoveAllListeners();
         yesButton.onClick.AddListener(delegate { DeleteWorkspace(workspace, workspaceObject); });
     }
     private void DeleteWorkspace(Workspace workspace, GameObject workspaceObject)
@@ -66,6 +162,12 @@ public class WorkspaceManager : MonoBehaviour
         Destroy(workspaceObject);
         workspaces.Remove(workspace);
         workspacesNames.Remove(workspace.name);
+        SaveWorkspaceListToJSON();
+        UpdateWorkspaceDropdown();
+    }
+
+    private void UpdateWorkspaceDropdown()
+    {
         workspaceDropdown.ClearOptions();
         workspaceDropdown.AddOptions(workspacesNames);
     }
@@ -74,4 +176,10 @@ public class WorkspaceManager : MonoBehaviour
         // Toggle the active state of the Add Menu
         addMenu.SetActive(!addMenu.activeSelf);
     }
+}
+
+[System.Serializable]
+public class WorkspaceList
+{
+    public List<Workspace> workspaces;
 }

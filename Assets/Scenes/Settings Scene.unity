@@ -2049,7 +2049,7 @@ GameObject:
   - component: {fileID: 367732023}
   - component: {fileID: 367732022}
   m_Layer: 5
-  m_Name: Timer Sound Dtopdown
+  m_Name: Timer Sound Dropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6839,7 +6839,7 @@ GameObject:
   - component: {fileID: 824411847}
   m_Layer: 0
   m_Name: Settings
-  m_TagString: Untagged
+  m_TagString: Settings
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6857,7 +6857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerSoundDropdown: {fileID: 367732022}
-  currentWorkspaceDropdown: {fileID: 0}
+  currentWorkspaceDropdown: {fileID: 1443613664}
 --- !u!4 &824411848
 Transform:
   m_ObjectHideFlags: 0
@@ -15431,7 +15431,7 @@ GameObject:
   - component: {fileID: 2121032434}
   m_Layer: 0
   m_Name: WorkspaceManager
-  m_TagString: Untagged
+  m_TagString: Workspace Manager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15448,6 +15448,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55ab09520c91a2f4187f5b65ae03c2f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultWorkspace:
+    name: Default Workspace
+    storageValue: 0
+    sessions: []
   workspaceDropdown: {fileID: 1443613664}
   OKButton: {fileID: 1154789007}
   addButton: {fileID: 130300429}

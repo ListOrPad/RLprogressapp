@@ -1,10 +1,12 @@
 using System;
+using TMPro;
 using UnityEngine;
 public class SessionManager : MonoBehaviour
 {
     public GameObject dayPrefab;
     public GameObject sessionPrefab;
     public GameObject content;
+    [SerializeField] private Settings settings;
 
     public Day today;
     private DateTime currentDate;
@@ -15,9 +17,10 @@ public class SessionManager : MonoBehaviour
     }
     private void Start()
     {
-        if (SessionDataHolder.Sessions != null)
+        settings = GameObject.Find("Settings").GetComponent<Settings>();
+        if (settings.GetWorkspace().sessions != null)
         {
-            foreach (SessionData sessionData in SessionDataHolder.Sessions)
+            foreach (SessionData sessionData in settings.GetWorkspace().sessions)
             {
                 AddSession(sessionData);
             }
