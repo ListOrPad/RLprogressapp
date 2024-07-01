@@ -68,7 +68,7 @@ public class Workspace
             }
             else
             {
-                Debug.Log("Data from JsonUtility.FromJson: " + data); // Log the result of the JsonUtility.FromJson call
+                Debug.Log("Data from JsonUtility.FromJson: " + data);
             }
         }
     }

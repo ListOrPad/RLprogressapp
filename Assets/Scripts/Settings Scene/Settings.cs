@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Settings : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown timerSoundDropdown;
-    [SerializeField] private TMP_Dropdown currentWorkspaceDropdown;
+    [SerializeField] private TMP_Dropdown workspaceDropdown;
     private WorkspaceManager workspaceManager;
     private Workspace currentWorkspace;
 
@@ -31,19 +31,20 @@ public class Settings : MonoBehaviour
     }
     private void RefreshBinds()
     {
-        if (timerSoundDropdown == null || currentWorkspaceDropdown == null)
+        if (timerSoundDropdown == null || workspaceDropdown == null)
         {
             timerSoundDropdown = GameObject.Find("Timer Sound Dropdown").GetComponentInChildren<TMP_Dropdown>();
-            currentWorkspaceDropdown = GameObject.Find("Workspace Dropdown").GetComponentInChildren<TMP_Dropdown>();
+            workspaceDropdown = GameObject.Find("Workspace Dropdown").GetComponentInChildren<TMP_Dropdown>();
         }
     }
-    // Update is called once per frame
+
     void Update()
     {
         try
         {
             RefreshBinds();
             SetTimerSound();
+            SetCurrentWorkspaceName();
         }
         catch
         {
@@ -56,14 +57,18 @@ public class Settings : MonoBehaviour
         string timerSound = timerSoundDropdown.options[timerSoundDropdown.value].text;
         PlayerPrefs.SetString("TimerSound", timerSound);
     }
+    private void SetCurrentWorkspaceName()
+    {
+        string currentWorkspaceName = workspaceDropdown.options[workspaceDropdown.value].text;
+        PlayerPrefs.SetString("CurrentWorkspace", currentWorkspaceName);
+    }
     public Workspace GetWorkspace()
     {
         //there maybe later must be a variable for 0 float value so that it hold storage value and not nullify it all the time
         try
         {
-            string currentWorkspaceName = currentWorkspaceDropdown.options[currentWorkspaceDropdown.value].text;
-            PlayerPrefs.SetString("CurrentWorkspace", currentWorkspaceName);
-            //this is wrong, sessions should be created only in workspace manager... or not?
+            
+            //it always resets bank to 0?
             currentWorkspace = new Workspace(PlayerPrefs.GetString("CurrentWorkspace"), 0); 
             //currentWorkspace.Initialize();
             return currentWorkspace;

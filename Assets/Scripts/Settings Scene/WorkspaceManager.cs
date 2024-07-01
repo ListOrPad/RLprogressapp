@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using System.IO;
 
 public class WorkspaceManager : MonoBehaviour
@@ -13,7 +12,9 @@ public class WorkspaceManager : MonoBehaviour
     private List<string> workspacesNames = new List<string>();
 
     private static string workspacesFilepath;
+    private static WorkspaceManager instance; //why do i need this?
 
+    [SerializeField] private Settings settings;
     [SerializeField] private Button OKButton;
     [SerializeField] private Button addButton;
     [SerializeField] private TMP_InputField workspaceInputField;
@@ -23,42 +24,12 @@ public class WorkspaceManager : MonoBehaviour
     [SerializeField] private GameObject deleteConfirmationMenu;
     [SerializeField] private TMP_Dropdown workspaceDropdown;
 
-    //private void RefreshBinds()
-    //{
-    //    if (SceneManager.GetActiveScene().buildIndex == 5)
-    //    {
-    //        workspaceDropdown = GameObject.Find("Workspace Dropdown").GetComponent<TMP_Dropdown>();
-    //        addMenu = GameObject.Find("Add workspace menu"); //inactive gameobject, so wont find
-    //        addButton = GameObject.Find("\"Add\" button").GetComponent<Button>();
-    //        addButton.onClick.AddListener(delegate { ToggleAddMenu(); });
-    //        content = GameObject.Find("Content").GetComponent<GameObject>();
-    //        OKButton = GameObject.Find("\"OK\" button").GetComponent<Button>();
-    //        OKButton.onClick.AddListener(delegate { CreateWorkspace(); });
-    //        workspaceInputField = GameObject.Find("Add workspace menu").GetComponentInChildren<TMP_InputField>();
-    //        workspacePrefab = Resources.Load<GameObject>("Assets/Prefabs/Workspace");
-    //        deleteConfirmationMenu = GameObject.Find("Delete confirmation menu");
-    //    }
-    //}
-
     private void Update()
     {
-        try
-        {
-            //RefreshBinds();
-        }
-        catch
-        {
 
-        }
     }
     private void Awake()
     {
-        //GameObject[] workspaceManagerObj = GameObject.FindGameObjectsWithTag("Workspace Manager");
-        //if (workspaceManagerObj.Length > 1)
-        //{
-        //    Destroy(this.gameObject);
-        //}
-        //DontDestroyOnLoad(this.gameObject);
         workspacesFilepath = Path.Combine(Application.persistentDataPath, "_workspaces_list.json");
     }
     void Start()
@@ -80,7 +51,7 @@ public class WorkspaceManager : MonoBehaviour
 
     private void CreateWorkspace()
     {
-        if(workspaceInputField != null && !string.IsNullOrWhiteSpace(workspaceInputField.text))
+        if(workspaceInputField != null & !string.IsNullOrWhiteSpace(workspaceInputField.text))
         {
             Workspace workspace = new Workspace(workspaceInputField.text, 0);
             workspace.Initialize();
@@ -90,7 +61,7 @@ public class WorkspaceManager : MonoBehaviour
             SaveWorkspaceListToJSON();
             workspacesNames.Add(workspace.name);
 
-            //prepare workspace for deleting
+            //prepare workspace for possible future deleting
             workspaceObject.GetComponentInChildren<Button>().onClick.AddListener(() => { PrepareWorkspaceDelete(workspace, workspaceObject); });
 
             UpdateWorkspaceDropdown();
@@ -170,6 +141,7 @@ public class WorkspaceManager : MonoBehaviour
     {
         workspaceDropdown.ClearOptions();
         workspaceDropdown.AddOptions(workspacesNames);
+        workspaceDropdown.value = workspacesNames.IndexOf(settings.GetWorkspace().name);
     }
     private void ToggleAddMenu()
     {
