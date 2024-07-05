@@ -82,6 +82,7 @@ public class Timer : MonoBehaviour
         }
         RefreshBinds();
         SetTimerText(); // thats the problem here, shouldn't be in update
+
         //changes pause sprite to play sprite and vice versa depending on if timer is active
         try
         {

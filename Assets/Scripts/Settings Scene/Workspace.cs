@@ -9,6 +9,7 @@ public class Workspace
     public string name;
     public float storageValue;
     public List<SessionData> sessions;
+    public static Workspace instance;
 
     private static string filePath;
 

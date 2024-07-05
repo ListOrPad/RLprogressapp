@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Settings : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown timerSoundDropdown;
     [SerializeField] private TMP_Dropdown workspaceDropdown;
-    private WorkspaceManager workspaceManager;
     private Workspace currentWorkspace;
 
     private void Awake()
@@ -19,10 +18,20 @@ public class Settings : MonoBehaviour
             Destroy(this.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
     void Start()
     {
+        StartSettings();
+    }
+    private void StartSettings()
+    {
+        Workspace.instance = new Workspace(PlayerPrefs.GetString("CurrentWorkspace"), 0); //storage Value later should be variable
+
+        //Set timer sound dropdown
         string savedTimerSound = PlayerPrefs.GetString("TimerSound", "Default Value");
+        Debug.Log("123");
         int index = timerSoundDropdown.options.FindIndex(option => option.text == savedTimerSound);
         if (index != -1)
         {
@@ -38,7 +47,7 @@ public class Settings : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
         try
         {
@@ -50,6 +59,15 @@ public class Settings : MonoBehaviour
         {
 
         }
+    }
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Settings Scene")
+        {
+            RefreshBinds();
+            StartSettings();
+        }
+            
     }
     private void SetTimerSound()
 
@@ -64,12 +82,10 @@ public class Settings : MonoBehaviour
     }
     public Workspace GetWorkspace()
     {
-        //there maybe later must be a variable for 0 float value so that it hold storage value and not nullify it all the time
         try
         {
-            
-            //it always resets bank to 0?
-            currentWorkspace = new Workspace(PlayerPrefs.GetString("CurrentWorkspace"), 0); 
+            //it always resets bank to 0? sounds like a problem
+            currentWorkspace = Workspace.instance; 
             //currentWorkspace.Initialize();
             return currentWorkspace;
         }

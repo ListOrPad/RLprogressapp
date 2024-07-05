@@ -24,10 +24,6 @@ public class WorkspaceManager : MonoBehaviour
     [SerializeField] private GameObject deleteConfirmationMenu;
     [SerializeField] private TMP_Dropdown workspaceDropdown;
 
-    private void Update()
-    {
-
-    }
     private void Awake()
     {
         workspacesFilepath = Path.Combine(Application.persistentDataPath, "_workspaces_list.json");
