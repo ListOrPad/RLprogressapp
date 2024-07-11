@@ -6,43 +6,42 @@ using UnityEngine;
 [System.Serializable]
 public class Workspace
 {
-    public string name;
-    public float storageValue;
-    public List<SessionData> sessions;
-    public static Workspace instance;
+    public string Name { get; set;}
+    public float StorageValue { get; set; }
+    public List<SessionData> Sessions { get; set; }
 
     private static string filePath;
 
     public Workspace()
     {
-        name = "Default Workspace";
-        storageValue = 0;
-        sessions = new List<SessionData>();
+        Name = "Default Workspace";
+        StorageValue = 0;
+        Sessions = new List<SessionData>();
     }
     public Workspace(string name, float storageValue)
     {
-        this.name = name;
-        this.storageValue = storageValue;
-        this.sessions = new List<SessionData>();
+        Name = name;
+        StorageValue = storageValue;
+        Sessions = new List<SessionData>();
     }
 
     public void Initialize()
     {
-        filePath = Path.Combine(Application.persistentDataPath, name + "_sessions.json");
+        filePath = Path.Combine(Application.persistentDataPath, Name + "_sessions.json");
         LoadSessions();
     }
 
     public void AddSession(SessionData session)
     {
-        sessions.Add(session);
+        Sessions.Add(session);
         SaveSessions();
     }
 
     private void SaveSessions()
     {
-        if (sessions.Count > 0)
+        if (Sessions.Count > 0)
         {
-            string json = JsonUtility.ToJson(new SerializationSessionWrapper<SessionData> { Items = sessions });
+            string json = JsonUtility.ToJson(new SerializationSessionWrapper<SessionData> { Items = Sessions });
             File.WriteAllText(filePath, json);
             Debug.Log("Saved sessions: " + json);
         }
@@ -63,8 +62,8 @@ public class Workspace
 
             if (data != null && data.Items != null)
             {
-                sessions.Clear();
-                sessions.AddRange(data.Items);
+                Sessions.Clear();
+                Sessions.AddRange(data.Items);
                 Debug.Log("Loaded sessions: " + json);
             }
             else

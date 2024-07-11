@@ -8,6 +8,7 @@ public class Settings : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown timerSoundDropdown;
     [SerializeField] private TMP_Dropdown workspaceDropdown;
+    private WorkspaceManager workspaceManager;
     private Workspace currentWorkspace;
 
     private void Awake()
@@ -23,15 +24,12 @@ public class Settings : MonoBehaviour
     }
     void Start()
     {
-        StartSettings();
+        SetTimerSoundDropdown();
+        workspaceDropdown.value = workspaceManager.WorkspacesNames.IndexOf(GetWorkspace().Name);
     }
-    private void StartSettings()
+    private void SetTimerSoundDropdown()
     {
-        Workspace.instance = new Workspace(PlayerPrefs.GetString("CurrentWorkspace"), 0); //storage Value later should be variable
-
-        //Set timer sound dropdown
         string savedTimerSound = PlayerPrefs.GetString("TimerSound", "Default Value");
-        Debug.Log("123");
         int index = timerSoundDropdown.options.FindIndex(option => option.text == savedTimerSound);
         if (index != -1)
         {
@@ -51,7 +49,6 @@ public class Settings : MonoBehaviour
     {
         try
         {
-            RefreshBinds();
             SetTimerSound();
             SetCurrentWorkspaceName();
         }
@@ -65,9 +62,9 @@ public class Settings : MonoBehaviour
         if (scene.name == "Settings Scene")
         {
             RefreshBinds();
-            StartSettings();
+            SetTimerSoundDropdown();
+            workspaceManager = GameObject.Find("WorkspaceManager").GetComponent<WorkspaceManager>();
         }
-            
     }
     private void SetTimerSound()
 
@@ -84,8 +81,7 @@ public class Settings : MonoBehaviour
     {
         try
         {
-            //it always resets bank to 0? sounds like a problem
-            currentWorkspace = Workspace.instance; 
+            currentWorkspace = workspaceManager.workspaces.Find(w => w.Name == PlayerPrefs.GetString("CurrentWorkspace")); 
             //currentWorkspace.Initialize();
             return currentWorkspace;
         }

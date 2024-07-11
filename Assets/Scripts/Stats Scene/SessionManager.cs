@@ -18,9 +18,9 @@ public class SessionManager : MonoBehaviour
     private void Start()
     {
         settings = GameObject.Find("Settings").GetComponent<Settings>();
-        if (settings.GetWorkspace().sessions != null)
+        if (settings.GetWorkspace().Sessions != null)
         {
-            foreach (SessionData sessionData in settings.GetWorkspace().sessions)
+            foreach (SessionData sessionData in settings.GetWorkspace().Sessions)
             {
                 AddSession(sessionData);
             }

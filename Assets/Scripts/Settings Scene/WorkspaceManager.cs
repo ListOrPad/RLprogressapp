@@ -1,18 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.CompilerServices;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
+using Newtonsoft.Json;
 
 public class WorkspaceManager : MonoBehaviour
 {
-    public Workspace defaultWorkspace = new Workspace();
-    private List<Workspace> workspaces = new List<Workspace>();
+    public List<Workspace> workspaces = new List<Workspace>();
+
+    public List<string> WorkspacesNames { get { return workspacesNames; } }
     private List<string> workspacesNames = new List<string>();
 
-    private static string workspacesFilepath;
-    private static WorkspaceManager instance; //why do i need this?
+    public Workspace DefaultWorkspace {get { return defaultWorkspace; } }
+    private Workspace defaultWorkspace = new Workspace();
+
+    private string workspacesFilepath;//it was static???
 
     [SerializeField] private Settings settings;
     [SerializeField] private Button OKButton;
@@ -32,10 +36,10 @@ public class WorkspaceManager : MonoBehaviour
     {
         LoadWorkspaceListFromJSON();
 
-        if (!workspaces.Exists(w => w.name == defaultWorkspace.name))
+        if (!workspaces.Exists(w => w.Name == DefaultWorkspace.Name))
         {
-            workspaces.Add(defaultWorkspace);
-            workspacesNames.Add(defaultWorkspace.name);
+            workspaces.Add(DefaultWorkspace);
+            workspacesNames.Add(DefaultWorkspace.Name);
             SaveWorkspaceListToJSON();
         }
 
@@ -47,15 +51,15 @@ public class WorkspaceManager : MonoBehaviour
 
     private void CreateWorkspace()
     {
-        if(workspaceInputField != null & !string.IsNullOrWhiteSpace(workspaceInputField.text))
+        if(workspaceInputField != null && !string.IsNullOrWhiteSpace(workspaceInputField.text))
         {
             Workspace workspace = new Workspace(workspaceInputField.text, 0);
             workspace.Initialize();
             GameObject workspaceObject = Instantiate(workspacePrefab, content.transform);
-            workspaceObject.GetComponentInChildren<TextMeshProUGUI>().text = workspace.name;
+            workspaceObject.GetComponentInChildren<TextMeshProUGUI>().text = workspace.Name;
             workspaces.Add(workspace);
             SaveWorkspaceListToJSON();
-            workspacesNames.Add(workspace.name);
+            workspacesNames.Add(workspace.Name);
 
             //prepare workspace for possible future deleting
             workspaceObject.GetComponentInChildren<Button>().onClick.AddListener(() => { PrepareWorkspaceDelete(workspace, workspaceObject); });
@@ -75,7 +79,7 @@ public class WorkspaceManager : MonoBehaviour
         WorkspaceList workspaceList = new WorkspaceList();
         workspaceList.workspaces = workspaces;
 
-        string json = JsonUtility.ToJson(workspaceList);
+        string json = JsonConvert.SerializeObject(workspaceList);
         File.WriteAllText(workspacesFilepath, json);
         Debug.Log("Saved workspaces to JSON: " + json);
     }
@@ -88,7 +92,7 @@ public class WorkspaceManager : MonoBehaviour
 
             if (!string.IsNullOrEmpty(json))
             {
-                WorkspaceList data = JsonUtility.FromJson<WorkspaceList>(json);
+                WorkspaceList data = JsonConvert.DeserializeObject<WorkspaceList>(json);
                 Debug.Log("Loaded from JSON: " + data);
 
                 workspaces.Clear();
@@ -97,8 +101,8 @@ public class WorkspaceManager : MonoBehaviour
                 foreach (var workspace in workspaces)
                 {
                     GameObject workspaceObject = Instantiate(workspacePrefab, content.transform);
-                    workspaceObject.GetComponentInChildren<TextMeshProUGUI>().text = workspace.name;
-                    workspacesNames.Add(workspace.name);
+                    workspaceObject.GetComponentInChildren<TextMeshProUGUI>().text = workspace.Name;
+                    workspacesNames.Add(workspace.Name);
 
                     //assign the delete button listener
                     workspaceObject.GetComponentInChildren<Button>().onClick.AddListener(() => { PrepareWorkspaceDelete(workspace, workspaceObject); });
@@ -118,7 +122,7 @@ public class WorkspaceManager : MonoBehaviour
     private void PrepareWorkspaceDelete(Workspace workspace, GameObject workspaceObject)
     {
         deleteConfirmationMenu.SetActive(true);
-        deleteConfirmationMenu.GetComponentInChildren<TextMeshProUGUI>().text = $"Sure want to delete the workspace \"{workspace.name}\"? it may lead to data loss";
+        deleteConfirmationMenu.GetComponentInChildren<TextMeshProUGUI>().text = $"Sure want to delete the workspace \"{workspace.Name}\"? it may lead to data loss";
         Button yesButton = deleteConfirmationMenu.GetComponentInChildren<Button>();
         yesButton.onClick.RemoveAllListeners();
         yesButton.onClick.AddListener(delegate { DeleteWorkspace(workspace, workspaceObject); });
@@ -128,7 +132,7 @@ public class WorkspaceManager : MonoBehaviour
         deleteConfirmationMenu.SetActive(false);
         Destroy(workspaceObject);
         workspaces.Remove(workspace);
-        workspacesNames.Remove(workspace.name);
+        workspacesNames.Remove(workspace.Name);
         SaveWorkspaceListToJSON();
         UpdateWorkspaceDropdown();
     }
@@ -137,11 +141,11 @@ public class WorkspaceManager : MonoBehaviour
     {
         workspaceDropdown.ClearOptions();
         workspaceDropdown.AddOptions(workspacesNames);
-        workspaceDropdown.value = workspacesNames.IndexOf(settings.GetWorkspace().name);
+        //workspaceDropdown.value = workspacesNames.IndexOf(settings.GetWorkspace().Name); //it repeats the same code as in settings Start, maybe delete?
     }
     private void ToggleAddMenu()
     {
-        // Toggle the active state of the Add Menu
+        // Change to opposite the active state of the Add Menu
         addMenu.SetActive(!addMenu.activeSelf);
     }
 }

@@ -49,7 +49,7 @@ public class Timer : MonoBehaviour
 
     private void Start()
     {
-        defaultWorkspace = workspaceManager.defaultWorkspace;
+        defaultWorkspace = workspaceManager.DefaultWorkspace;
         defaultWorkspace.Initialize();
     }
     private void Update()
@@ -186,7 +186,7 @@ public class Timer : MonoBehaviour
     {
         if(save)
         {
-            SessionData session = new SessionData(startSessionTime, settings.GetWorkspace().name, currentTime);
+            SessionData session = new SessionData(startSessionTime, settings.GetWorkspace().Name, currentTime);
             settings.GetWorkspace().AddSession(session);
 
             //finishing touches
