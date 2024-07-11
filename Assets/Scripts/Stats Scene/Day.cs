@@ -8,8 +8,8 @@ using UnityEngine;
 public class Day : MonoBehaviour
 {
     [SerializeField] private GameObject sessionPrefab;
-    [SerializeField] private TextMeshProUGUI dateText;
-    private DateTime date;
+    [SerializeField] private TextMeshProUGUI dayText;
+    private DateTime day;
     private List<GameObject> sessions = new List<GameObject>();
 
     public void AddSession(SessionData data)
@@ -18,8 +18,7 @@ public class Day : MonoBehaviour
         GameObject newSession = Instantiate(sessionPrefab, transform);
 
         // Get the Session component and set the data
-        Session session = newSession.GetComponent<Session>();
-        session.SetData(data);
+        newSession.GetComponent<Session>().SetSessionText(data);
 
         sessions.Add(newSession);
     }
@@ -27,16 +26,16 @@ public class Day : MonoBehaviour
     private void Start()
     {
         // Set the date label
-        dateText.text = date.ToString("dd MMM yy", CultureInfo.InvariantCulture); // Format the DateTime as "day month year"
+        dayText.text = day.ToString("dd MMM yy", CultureInfo.InvariantCulture); // Format the DateTime as "day month year"
     }
 
-    public void SetDate(DateTime date)
+    public void SetDay(DateTime day)
     {
-        this.date = date;
+        this.day = day;
     }
 
-    public DateTime GetDate()
+    public DateTime GetDay()
     {
-        return date;
+        return day;
     }
 }

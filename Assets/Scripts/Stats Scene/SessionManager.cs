@@ -35,16 +35,16 @@ public class SessionManager : MonoBehaviour
         }
     }
 
-    private void CreateNewDay(DateTime date)
+    private void CreateNewDay(DateTime day)
     {
         GameObject newDayObject = Instantiate(dayPrefab, content.transform);
         today = newDayObject.GetComponent<Day>();
-        today.SetDate(date); // Pass the date when creating a new day
+        today.SetDay(day); // Pass the date when creating a new day
     }
     public void AddSession(SessionData data)
     {
         // Check if a new day needs to be created
-        if (today == null || today.GetDate().Date != data.GetStartTime().Date)
+        if (today == null || today.GetDay().Date != data.GetStartTime().Date)
         {
             CreateNewDay(data.GetStartTime().Date);
         }

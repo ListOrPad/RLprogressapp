@@ -25,7 +25,7 @@ public class Settings : MonoBehaviour
     void Start()
     {
         SetTimerSoundDropdown();
-        workspaceDropdown.value = workspaceManager.WorkspacesNames.IndexOf(GetWorkspace().Name);
+        //workspaceDropdown.value = workspaceManager.WorkspacesNames.IndexOf(GetWorkspace().Name);
     }
     private void SetTimerSoundDropdown()
     {
@@ -82,13 +82,10 @@ public class Settings : MonoBehaviour
         try
         {
             currentWorkspace = workspaceManager.workspaces.Find(w => w.Name == PlayerPrefs.GetString("CurrentWorkspace")); 
-            //currentWorkspace.Initialize();
             return currentWorkspace;
         }
         catch
         {
-            //    currentWorkspace = new Workspace("Default Workspace", 0);
-            //    currentWorkspace.Initialize();
             return currentWorkspace;
         }
     }

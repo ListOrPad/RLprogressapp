@@ -16,7 +16,7 @@ public class WorkspaceManager : MonoBehaviour
     public Workspace DefaultWorkspace {get { return defaultWorkspace; } }
     private Workspace defaultWorkspace = new Workspace();
 
-    private string workspacesFilepath;//it was static???
+    private string workspacesFilepath;
 
     [SerializeField] private Settings settings;
     [SerializeField] private Button OKButton;
@@ -141,7 +141,7 @@ public class WorkspaceManager : MonoBehaviour
     {
         workspaceDropdown.ClearOptions();
         workspaceDropdown.AddOptions(workspacesNames);
-        //workspaceDropdown.value = workspacesNames.IndexOf(settings.GetWorkspace().Name); //it repeats the same code as in settings Start, maybe delete?
+        workspaceDropdown.value = workspacesNames.IndexOf(settings.GetWorkspace().Name);
     }
     private void ToggleAddMenu()
     {

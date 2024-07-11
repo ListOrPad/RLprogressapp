@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sessionPrefab: {fileID: 8030640956223743246, guid: 344cc0ff78038d74197cb93ccb712119, type: 3}
-  dateText: {fileID: 8089412515116275666}
+  dayText: {fileID: 8089412515116275666}
 --- !u!114 &8001136432237715342
 MonoBehaviour:
   m_ObjectHideFlags: 0
