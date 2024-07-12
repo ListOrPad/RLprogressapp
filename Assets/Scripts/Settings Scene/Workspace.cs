@@ -7,7 +7,9 @@ using UnityEngine;
 public class Workspace
 {
     public string Name { get; set;}
+    public float TimeValue { get; set; }
     public float StorageValue { get; set; }
+    public int Prestige { get; set; }
     public List<SessionData> Sessions { get; set; }
 
     private static string filePath;
@@ -18,10 +20,19 @@ public class Workspace
         StorageValue = 0;
         Sessions = new List<SessionData>();
     }
-    public Workspace(string name, float storageValue)
+    public Workspace(string name)
+    {
+        Name = name;
+        StorageValue = 0;
+        TimeValue = 0;
+        Prestige = 0;
+    }
+    public Workspace(string name, float storageValue, float timeValue, int prestige)
     {
         Name = name;
         StorageValue = storageValue;
+        TimeValue = timeValue;
+        Prestige = prestige;
         Sessions = new List<SessionData>();
     }
 

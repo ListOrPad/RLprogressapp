@@ -2,26 +2,26 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public static class SessionDataHolder
+public class SessionHistory //rename to SessionHistory? and make corresponding changes
 {
-    public static List<SessionData> Sessions { get; }
+    public List<SessionData> Sessions { get; }
 
-    private static string filePath;
+    private string filePath;
 
-    static SessionDataHolder()
+    public SessionHistory()
     {
         Sessions = new List<SessionData>();
         filePath = Path.Combine(Application.persistentDataPath, "sessions.json");
         LoadSessions();
     }
 
-    public static void AddSession(SessionData session)
+    public void AddSession(SessionData session)
     {
         Sessions.Add(session);
         SaveSessions();
     }
 
-    private static void SaveSessions()
+    private void SaveSessions()
     {
         if (Sessions.Count > 0)
         {
@@ -35,7 +35,7 @@ public static class SessionDataHolder
         }
     }
 
-    private static void LoadSessions()
+    private void LoadSessions()
     {
         if (File.Exists(filePath))
         {
