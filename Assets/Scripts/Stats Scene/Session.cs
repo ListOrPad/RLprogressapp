@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class Session : MonoBehaviour
 {
+
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI startTimeText;
     [SerializeField] private TextMeshProUGUI workspaceText;
+
 
     public void SetSessionText(SessionData data)
     {
@@ -19,5 +21,6 @@ public class Session : MonoBehaviour
         startTimeText.text = data.GetStartTime().ToString("HH:mm");
         workspaceText.text = data.WorkspaceName;
     }
+
     
 }

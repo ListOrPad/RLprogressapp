@@ -8,7 +8,7 @@ public class Settings : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown timerSoundDropdown;
     [SerializeField] private TMP_Dropdown workspaceDropdown;
-    private WorkspaceManager workspaceManager;
+    public WorkspaceManager WorkspaceManager { get; set; }
     private Workspace currentWorkspace;
 
     private void Awake()
@@ -63,7 +63,7 @@ public class Settings : MonoBehaviour
         {
             RefreshBinds();
             SetTimerSoundDropdown();
-            workspaceManager = GameObject.Find("WorkspaceManager").GetComponent<WorkspaceManager>();
+            WorkspaceManager = GameObject.Find("WorkspaceManager").GetComponent<WorkspaceManager>();
         }
     }
     private void SetTimerSound()
@@ -81,7 +81,7 @@ public class Settings : MonoBehaviour
     {
         try
         {
-            currentWorkspace = workspaceManager.workspaces.Find(w => w.Name == PlayerPrefs.GetString("CurrentWorkspace")); 
+            currentWorkspace = WorkspaceManager.workspaces.Find(w => w.Name == PlayerPrefs.GetString("CurrentWorkspace")); 
             return currentWorkspace;
         }
         catch

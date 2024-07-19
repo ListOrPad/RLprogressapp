@@ -1457,15 +1457,30 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 242365725}
-  - component: {fileID: 242365724}
+  - component: {fileID: 242365726}
   m_Layer: 0
-  m_Name: Session Manager
+  m_Name: Session History
   m_TagString: SessionManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &242365724
+--- !u!4 &242365725
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242365723}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &242365726
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1474,29 +1489,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 242365723}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09ab2b9d19590304288e77762da8723d, type: 3}
+  m_Script: {fileID: 11500000, guid: 140cd736a4b60a2489a8899fb29e3da9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dayPrefab: {fileID: 8089412515116275664, guid: 952a89c6778af4a42987ee6a7a99d094, type: 3}
   sessionPrefab: {fileID: 8030640956223743246, guid: 344cc0ff78038d74197cb93ccb712119, type: 3}
+  dayPrefab: {fileID: 8089412515116275664, guid: 952a89c6778af4a42987ee6a7a99d094, type: 3}
   content: {fileID: 1603279946}
-  settings: {fileID: 536559333}
-  today: {fileID: 0}
---- !u!4 &242365725
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 242365723}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &260090052
 GameObject:
   m_ObjectHideFlags: 0
@@ -2620,7 +2618,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerSoundDropdown: {fileID: 0}
-  currentWorkspaceDropdown: {fileID: 0}
+  workspaceDropdown: {fileID: 0}
 --- !u!4 &536559334
 Transform:
   m_ObjectHideFlags: 0

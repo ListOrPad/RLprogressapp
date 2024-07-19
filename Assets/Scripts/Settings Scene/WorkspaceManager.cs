@@ -54,7 +54,6 @@ public class WorkspaceManager : MonoBehaviour
         if(workspaceInputField != null && !string.IsNullOrWhiteSpace(workspaceInputField.text))
         {
             Workspace workspace = new Workspace(workspaceInputField.text);
-            workspace.Initialize();
             GameObject workspaceObject = Instantiate(workspacePrefab, content.transform);
             workspaceObject.GetComponentInChildren<TextMeshProUGUI>().text = workspace.Name;
             workspaces.Add(workspace);

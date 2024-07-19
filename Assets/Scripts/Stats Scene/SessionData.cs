@@ -9,7 +9,6 @@ public class SessionData
     public string StartTime { get; set; }
     public string WorkspaceName { get; set; }
     public float Duration { get; set; }
-    public SessionData() { }
 
     public SessionData(DateTime startTime, string workspaceName, float duration)
     {

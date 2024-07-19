@@ -29,7 +29,6 @@ public class Timer : MonoBehaviour
     [Header("Session Management")]
     [SerializeField] private SessionFinish sessionFinisher;
     private DateTime startSessionTime;
-    private Workspace defaultWorkspace;
     [SerializeField] private WorkspaceManager workspaceManager;
     [SerializeField] private Settings settings;
 
@@ -47,11 +46,6 @@ public class Timer : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    private void Start()
-    {
-        defaultWorkspace = workspaceManager.DefaultWorkspace;
-        defaultWorkspace.Initialize();
-    }
     private void Update()
     {
         //setup previous timer sound and new timer sound(if changed in settings)
@@ -102,6 +96,7 @@ public class Timer : MonoBehaviour
             timerText = GameObject.Find("Stopwatch").GetComponent<TextMeshProUGUI>(); // thats the problem here, shouldn't be in update
             sessionFinisher = GameObject.Find("SessionFinisher").GetComponent<SessionFinish>();
             settings = GameObject.Find("Settings").GetComponent<Settings>();
+            settings.WorkspaceManager = GameObject.Find("Workspace Manager").GetComponent<WorkspaceManager>();
         }
         catch (NullReferenceException)
         {
@@ -184,10 +179,10 @@ public class Timer : MonoBehaviour
     }
     public void SaveSession(bool save)
     {
-        if(save)
+        if(save && currentTime != 0)
         {
             SessionData session = new SessionData(startSessionTime, settings.GetWorkspace().Name, currentTime);
-            settings.GetWorkspace().AddSession(session);
+            SessionHistory.Sessions.Add(session);
 
             //finishing touches
             PlayerPrefs.DeleteKey("CurrentTime");

@@ -31,7 +31,7 @@ public class StatsHistoryView : MonoBehaviour
 
             foreach (SessionData session in group)
             {
-                newDay.AddSession(session);
+                //newDay.AddSession(session);
             }
         }
     }

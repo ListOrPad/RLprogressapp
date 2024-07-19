@@ -7,21 +7,10 @@ using UnityEngine;
 
 public class Day : MonoBehaviour
 {
-    [SerializeField] private GameObject sessionPrefab;
     [SerializeField] private TextMeshProUGUI dayText;
+    
     private DateTime day;
-    private List<GameObject> sessions = new List<GameObject>();
-
-    public void AddSession(SessionData data)
-    {
-        // Instantiate a new session object
-        GameObject newSession = Instantiate(sessionPrefab, transform);
-
-        // Get the Session component and set the data
-        newSession.GetComponent<Session>().SetSessionText(data);
-
-        sessions.Add(newSession);
-    }
+    
 
     private void Start()
     {
