@@ -9,12 +9,14 @@ public class SessionData
     public string StartTime { get; set; }
     public string WorkspaceName { get; set; }
     public float Duration { get; set; }
+    public DateTime TimeCreated { get; set; }
 
     public SessionData(DateTime startTime, string workspaceName, float duration)
     {
         StartTime = startTime.ToString("O");
         WorkspaceName = workspaceName;
         Duration = duration;
+        TimeCreated = DateTime.Now;
     }
 
     public DateTime GetStartTime()

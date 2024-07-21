@@ -1,16 +1,23 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using UnityEditor;
+using TMPro;
 
 public class SessionHistory : MonoBehaviour
 {
-    private ViewPeriod currentViewPeriod = ViewPeriod.ThisWeek;
+    public ViewPeriod CurrentViewPeriod { get; set; } = ViewPeriod.ThisWeek;
 
+    [Header("Session Management")]
     [SerializeField] private GameObject sessionPrefab;
     [SerializeField] private GameObject dayPrefab;
     [SerializeField] private GameObject content;
+
+    [Header("Periods")]
+    [SerializeField] private TMP_Dropdown periodDropdown;
 
     public static List<SessionData> Sessions { get; } = new List<SessionData>();
     private List<GameObject> SessionObjects { get; } = new List<GameObject>();
@@ -29,12 +36,44 @@ public class SessionHistory : MonoBehaviour
     }
     private void Start()
     {
+        
         CreateNewDay();
         today.SetDay(DateTime.Today);
 
-        if (Sessions != null)
+        DisplaySessions();
+    }
+    private void Update()
+    {
+        ChangeViewPeriod(periodDropdown.options[periodDropdown.value].text);
+    }
+
+    private void ChangeViewPeriod(string period)
+    {
+        switch (period)
         {
-            foreach (SessionData sessionData in Sessions)
+            case "Today":
+                CurrentViewPeriod = ViewPeriod.Today; break;
+            case "Yesterday":
+                CurrentViewPeriod = ViewPeriod.Yesterday; break;
+            case "This Week":
+                CurrentViewPeriod = ViewPeriod.ThisWeek; break;
+            case "Previous Week":
+                CurrentViewPeriod = ViewPeriod.PreviousWeek; break;
+            case "This Month":
+                CurrentViewPeriod = ViewPeriod.ThisMonth; break;
+            case "Previous Month":
+                CurrentViewPeriod = ViewPeriod.PreviousMonth; break;
+            case "Lifetime":
+                CurrentViewPeriod = ViewPeriod.Lifetime; break;
+        }
+    }
+
+    public void DisplaySessions()
+    {
+        if (CurrentViewPeriod == ViewPeriod.Today)
+        {
+            List<SessionData> sessionsToDisplay = GetSessionsInChronologicalOrder();
+            foreach (SessionData sessionData in sessionsToDisplay)
             {
                 AddSession(sessionData, today);
             }
@@ -99,6 +138,34 @@ public class SessionHistory : MonoBehaviour
             }
         }
     }
+
+    private List<SessionData> GetSessionsInChronologicalOrder()
+    {
+        if (Sessions.Count > 0 && !IsNewestSessionFirst())
+        {
+            List<SessionData> orderedSessions = Sessions;
+            orderedSessions.Reverse();
+            return orderedSessions;
+        }
+
+        return Sessions;
+    }
+
+    /// <summary>
+    /// A check to determine if the first session is the newest
+    /// </summary>
+    private bool IsNewestSessionFirst()
+    {
+        if(Sessions.Count < 2) return false;
+
+        return Sessions[0].TimeCreated > Sessions[1].TimeCreated;
+    }
+
+
+
+
+
+
 }
 
 [System.Serializable]

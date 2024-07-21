@@ -182,7 +182,7 @@ public class Timer : MonoBehaviour
         if(save && currentTime != 0)
         {
             SessionData session = new SessionData(startSessionTime, settings.GetWorkspace().Name, currentTime);
-            SessionHistory.Sessions.Add(session);
+            SessionHistory.Sessions.Insert(0, session);
 
             //finishing touches
             PlayerPrefs.DeleteKey("CurrentTime");
